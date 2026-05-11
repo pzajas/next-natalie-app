@@ -1,0 +1,257 @@
+"use client";
+
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  type PricingCategory,
+  type PricingCategoryId,
+  pricingCategories,
+} from "@/lib/pricing-data";
+import { ContentContainer } from "./ContentContainer";
+import { PricingServiceRow } from "./PricingServiceRow";
+
+const ALL = "wszystkie" as const;
+
+function normalize(s: string) {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "");
+}
+
+function uslugLabel(n: number) {
+  if (n === 1) {
+    return "usługa";
+  }
+  const k = n % 10;
+  const j = n % 100;
+  if (k >= 2 && k <= 4 && (j < 12 || j > 14)) {
+    return "usługi";
+  }
+  return "usług";
+}
+
+export function PricingPageView() {
+  const [query, setQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<typeof ALL | PricingCategoryId>(ALL);
+  const [openMap, setOpenMap] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(pricingCategories.map((c) => [c.id, true])),
+  );
+
+  const chipStripRef = useRef<HTMLDivElement>(null);
+  const stripDrag = useRef({
+    pointerId: -1,
+    startX: 0,
+    startScrollLeft: 0,
+    dragging: false,
+  });
+  const blockChipClickUntil = useRef(0);
+
+  const onChipStripPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse" && e.button !== 0) {
+      return;
+    }
+    const el = chipStripRef.current;
+    if (!el) {
+      return;
+    }
+    if (el.scrollWidth <= el.clientWidth + 2) {
+      return;
+    }
+    stripDrag.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startScrollLeft: el.scrollLeft,
+      dragging: false,
+    };
+    el.setPointerCapture(e.pointerId);
+  }, []);
+
+  const onChipStripPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerId !== stripDrag.current.pointerId) {
+      return;
+    }
+    const el = chipStripRef.current;
+    if (!el) {
+      return;
+    }
+    const dx = e.clientX - stripDrag.current.startX;
+    if (Math.abs(dx) > 6) {
+      stripDrag.current.dragging = true;
+    }
+    el.scrollLeft = stripDrag.current.startScrollLeft - dx;
+  }, []);
+
+  const onChipStripPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerId !== stripDrag.current.pointerId) {
+      return;
+    }
+    const el = chipStripRef.current;
+    try {
+      el?.releasePointerCapture(e.pointerId);
+    } catch {
+      /* already released */
+    }
+    if (stripDrag.current.dragging) {
+      blockChipClickUntil.current = Date.now() + 320;
+    }
+    stripDrag.current.pointerId = -1;
+    stripDrag.current.dragging = false;
+  }, []);
+
+  const onChipStripLostPointerCapture = useCallback(() => {
+    stripDrag.current.pointerId = -1;
+    stripDrag.current.dragging = false;
+  }, []);
+
+  const onChipStripClickCapture = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (Date.now() < blockChipClickUntil.current) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, []);
+
+  const toggleCategory = useCallback((id: string) => {
+    setOpenMap((prev) => ({ ...prev, [id]: !prev[id] }));
+  }, []);
+
+  const chipCount = 1 + pricingCategories.length;
+
+  const filteredCategories = useMemo(() => {
+    const q = normalize(query.trim());
+    const match = (c: PricingCategory) => {
+      if (categoryFilter !== ALL && c.id !== categoryFilter) {
+        return null;
+      }
+      const services = c.services.filter((s) => {
+        if (!q) {
+          return true;
+        }
+        const hay = normalize(`${s.name} ${s.description ?? ""}`);
+        return hay.includes(q);
+      });
+      if (services.length === 0) {
+        return null;
+      }
+      return { ...c, services };
+    };
+    return pricingCategories.map(match).filter(Boolean) as PricingCategory[];
+  }, [categoryFilter, query]);
+
+  return (
+    <>
+      <section className="border-b border-black/5 bg-white py-[60px]">
+        <ContentContainer>
+          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+            <h1 className="section-title max-w-xl">Cennik</h1>
+            <div className="relative w-full max-w-md shrink-0">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500"
+                strokeWidth={1.5}
+                aria-hidden
+              />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Szukaj usługi"
+                className="w-full border border-black/15 bg-atelier-light/50 py-2.5 pl-10 pr-4 text-sm text-black outline-none transition-colors placeholder:text-stone-500 focus:border-black/40"
+                aria-label="Szukaj usługi"
+              />
+            </div>
+          </div>
+        </ContentContainer>
+      </section>
+
+      <section className="border-b border-black/5 bg-white py-6" aria-label="Filtry kategorii">
+        <ContentContainer>
+          <div
+            ref={chipStripRef}
+            onPointerDown={onChipStripPointerDown}
+            onPointerMove={onChipStripPointerMove}
+            onPointerUp={onChipStripPointerUp}
+            onPointerCancel={onChipStripPointerUp}
+            onLostPointerCapture={onChipStripLostPointerCapture}
+            onClickCapture={onChipStripClickCapture}
+            className="flex w-full cursor-grab select-none flex-nowrap items-stretch gap-2 overflow-x-auto overflow-y-hidden pb-1 scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden md:mx-auto md:grid md:w-full md:max-w-[1200px] md:cursor-default md:gap-1 md:overflow-visible md:select-auto md:[grid-template-columns:repeat(var(--pricing-chip-cols),minmax(0,1fr))] md:active:cursor-default"
+            style={{ ["--pricing-chip-cols" as string]: String(chipCount) }}
+            aria-label="Kategorie usług — na małym ekranie przewiń lub przeciągnij"
+          >
+            <button
+              type="button"
+              title="Wszystkie kategorie"
+              onClick={() => setCategoryFilter(ALL)}
+              className={`shrink-0 border px-2 py-2.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.08em] transition-colors max-md:whitespace-nowrap md:min-w-0 md:truncate md:px-1.5 md:text-[9px] md:leading-snug ${
+                categoryFilter === ALL
+                  ? "border-black bg-black text-white"
+                  : "border-black/15 bg-transparent text-stone-600 hover:border-black/40 hover:text-black"
+              }`}
+            >
+              Wszystkie
+            </button>
+            {pricingCategories.map((c) => (
+              <button
+                key={c.id}
+                type="button"
+                title={c.name}
+                onClick={() => setCategoryFilter(c.id)}
+                className={`shrink-0 border px-2 py-2.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.08em] transition-colors max-md:whitespace-nowrap md:min-w-0 md:truncate md:px-1.5 md:text-[9px] md:leading-snug ${
+                  categoryFilter === c.id
+                    ? "border-black bg-black text-white"
+                    : "border-black/15 bg-transparent text-stone-600 hover:border-black/40 hover:text-black"
+                }`}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+        </ContentContainer>
+      </section>
+
+      <section className="bg-white py-[60px]" aria-label="Lista usług i ceny">
+        <ContentContainer>
+          {filteredCategories.length === 0 ? (
+            <p className="text-center text-sm text-stone-500">Brak usług spełniających kryteria.</p>
+          ) : (
+            <div className="space-y-16">
+              {filteredCategories.map((cat) => {
+                const open = openMap[cat.id] !== false;
+                return (
+                  <div key={cat.id}>
+                    <h2 className="mb-6 font-normal leading-snug">
+                      <button
+                        type="button"
+                        onClick={() => toggleCategory(cat.id)}
+                        className="flex w-full items-center justify-between gap-4 border-b border-black/10 pb-4 text-left transition-opacity hover:opacity-80"
+                        aria-expanded={open}
+                      >
+                        <span className="flex min-w-0 items-center gap-3">
+                          {open ? (
+                            <ChevronUp className="h-5 w-5 shrink-0 text-stone-500" strokeWidth={1.5} />
+                          ) : (
+                            <ChevronDown className="h-5 w-5 shrink-0 text-stone-500" strokeWidth={1.5} />
+                          )}
+                          <span className="text-2xl text-black">{cat.name}</span>
+                        </span>
+                        <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                          {cat.services.length} {uslugLabel(cat.services.length)}
+                        </span>
+                      </button>
+                    </h2>
+                    {open ? (
+                      <div className="max-w-4xl divide-y divide-black/10">
+                        {cat.services.map((s) => (
+                          <PricingServiceRow key={s.id} service={s} />
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </ContentContainer>
+      </section>
+    </>
+  );
+}

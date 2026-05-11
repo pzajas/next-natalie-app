@@ -1,26 +1,201 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-bodoni-moda), ui-serif, Georgia, serif;
+  --color-atelier-light: #f7f7f7;
+  --color-atelier-dark: #111111;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    color: #171717;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a[href] {
+    cursor: pointer;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]):not(:disabled),
+  input[type="button"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  input[type="reset"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  input:disabled,
+  a[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+h1,
+h2,
+h3,
+.serif-font {
+  font-family: var(--font-serif), ui-serif, Georgia, serif;
+  letter-spacing: -0.02em;
+}
+
+@layer utilities {
+  .section-title {
+    font-family: var(--font-serif), ui-serif, Georgia, serif;
+    font-size: 3rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    color: #000;
+  }
+
+  @media (min-width: 768px) {
+    .section-title {
+      font-size: 3.75rem;
+    }
+  }
+
+  .nav-link {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+  }
+
+  .label-caps {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+  }
+
+  .content-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .shadow-subtle {
+    box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.2);
+  }
+
+  .grain-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: radial-gradient(#000 0.55px, transparent 0.55px);
+    background-size: 3px 3px;
+  }
+
+  .reveal-fade-up {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fade-up 800ms ease-out forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-fade-up {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /**
+   * Scroll reveal (sekcje): opacity + translateY, 0.6–0.9s, premium easing.
+   * Klasa .reveal-on-scroll--visible dodawana przez RevealOnScroll (IntersectionObserver).
+   */
+  .reveal-on-scroll {
+    --reveal-dur: 0.78s;
+    --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+    transition:
+      opacity var(--reveal-dur) var(--reveal-ease),
+      transform var(--reveal-dur) var(--reveal-ease);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-scroll:not(.reveal-on-scroll--visible) {
+      opacity: 0;
+      transform: translate3d(0, 20px, 0);
+    }
+
+    .reveal-on-scroll--visible {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      will-change: auto;
+    }
+  }
+
+  .font-playfair {
+    font-family: var(--font-playfair), Georgia, serif;
+  }
+
+  .logo-no-bg {
+    mix-blend-mode: multiply;
+    filter: contrast(1.15);
+  }
+
+  /**
+   * Galeria: domyślnie czarno-biało, po najechaniu pełny kolor.
+   * Czas animacji filtra + scale: na elemencie Image (`transition-[filter,transform]`).
+   * Bez efektu na urządzeniach bez hover (dotyk) i przy prefers-reduced-motion.
+   */
+  @media (hover: hover) and (pointer: fine) {
+    @media (prefers-reduced-motion: no-preference) {
+      .gallery-color-reveal-target :where(img) {
+        filter: grayscale(1);
+      }
+
+      .gallery-color-reveal-target:is(:hover, :focus-visible) :where(img) {
+        filter: grayscale(0);
+      }
+    }
+  }
+
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+  }
 }
