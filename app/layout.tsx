@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bodoni_Moda, Inter, Playfair_Display } from "next/font/google";
+import { ScrollToTopButton, RouteScrollToTop } from "@/components/natalie";
 import "./globals.css";
 
 const inter = Inter({
@@ -23,9 +24,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "NATALIE | Precyzyjne fryzjerstwo",
+  title: "NATALIE | Salon Fryzjerski Premium w Oświęcimiu",
   description:
-    "Nowoczesny salon fryzjerski — precyzja, naturalny styl i klasyczne techniki barberingu.",
+    "Nowoczesny salon fryzjerski w Oświęcimiu. Strzyżenie damskie i męskie, nowoczesne cięcia oraz naturalny styl bez przesadnej stylizacji.",
 };
 
 export default function RootLayout({
@@ -39,7 +40,9 @@ export default function RootLayout({
       className={`${inter.variable} ${bodoniModa.variable} ${playfair.variable} h-full`}
     >
       <body className="min-h-full bg-atelier-light text-atelier-dark font-sans antialiased">
+        <RouteScrollToTop />
         {children}
+        <ScrollToTopButton />
       </body>
     </html>
   );

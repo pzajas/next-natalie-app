@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <>
       <MainHeader />
-      <main className="pt-24">
+      <main>
         <HeroSection />
         <RevealOnScroll>
           <PhilosophySection />

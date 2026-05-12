@@ -11,7 +11,7 @@ export default function GaleriaPage() {
   return (
     <>
       <MainHeader />
-      <main className="pt-24">
+      <main>
         <GalleryPageView />
       </main>
       <MainFooter />

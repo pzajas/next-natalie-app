@@ -69,15 +69,15 @@ export function PhilosophyTeamSpotlight() {
     <div
       aria-live="polite"
       aria-atomic="true"
-      className={`space-y-8 transition-opacity ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${
+      className={`space-y-6 transition-opacity ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:space-y-8 ${
         visible ? "opacity-100 duration-520" : "pointer-events-none opacity-0 duration-480"
       }`}
     >
-      <div>
+      <div className="min-h-[5.75rem] md:min-h-[6.25rem]">
         <p className="label-caps text-stone-700">{profile.roleLabel}</p>
-        <h2 className="section-title mt-3">{profile.name}</h2>
+        <h2 className="section-title mt-2 md:mt-3">{profile.name}</h2>
       </div>
-      <div className="max-w-lg space-y-5 text-base font-medium leading-relaxed text-stone-700">
+      <div className="min-h-[15.5rem] max-w-lg space-y-4 text-[0.9375rem] font-medium leading-relaxed text-stone-700 md:min-h-[17.5rem] md:space-y-5 md:text-base">
         {profile.paragraphs.map((text, i) => (
           <p key={`${profile.id}-${i}`}>{text}</p>
         ))}

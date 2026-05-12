@@ -79,11 +79,6 @@ const testimonials = [
   },
 ] as const;
 
-const testimonialsGridMinHeightRem = Math.min(
-  20,
-  Math.max(11, 5 + Math.ceil(Math.max(...testimonials.map((t) => t.quote.length)) / 34) * 2.75),
-);
-
 export function TestimonialsSection() {
   const [page, setPage] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -123,28 +118,27 @@ export function TestimonialsSection() {
   return (
     <section
       id="opinie"
-      className="scroll-mt-28 bg-white py-[52px]"
+      className="scroll-mt-28 bg-white py-10 md:py-[52px]"
       data-purpose="testimonials"
     >
       <ContentContainer>
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center md:mb-12">
           <h2 className="section-title text-center">Opinie klientów</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base font-medium text-stone-700">
+          <p className="mx-auto mt-3 max-w-2xl text-sm font-medium text-stone-700 md:mt-4 md:text-base">
             Zweryfikowane opinie z Google i Booksy.
           </p>
         </div>
         <div
-          className={`mb-12 grid min-h-0 grid-cols-1 items-stretch gap-6 transition-opacity duration-500 ease-in-out md:min-h-(--tm-row-min) md:grid-cols-3 ${
+          className={`mb-8 grid min-h-0 grid-cols-1 items-stretch gap-4 transition-opacity duration-500 ease-in-out md:mb-12 md:grid-cols-3 md:gap-6 ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
-          style={{ ["--tm-row-min" as string]: `${testimonialsGridMinHeightRem}rem` }}
         >
           {groups[page].map((t) => (
             <div
               key={`${t.author}-${t.quote}`}
-              className="flex h-full min-h-32 flex-col border border-black/8 bg-stone-50 p-6 shadow-subtle transition-shadow duration-300 ease-out hover:shadow-[0_28px_52px_-14px_rgba(0,0,0,0.26)] md:min-h-0"
+              className="flex h-full flex-col border border-black/8 bg-stone-50 p-5 shadow-subtle transition-shadow duration-300 ease-out hover:shadow-[0_28px_52px_-14px_rgba(0,0,0,0.26)] md:min-h-0 md:p-6"
             >
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-3 flex items-center justify-between md:mb-4">
                 <p className="text-sm font-semibold text-black">{t.author}</p>
                 <div className="flex items-center gap-1" aria-label="Ocena 5 na 5">
                   {Array.from({ length: 5 }).map((_, i) => (
@@ -159,23 +153,26 @@ export function TestimonialsSection() {
                 </div>
               </div>
               <div className="flex min-h-0 flex-1 flex-col">
-                <p className="font-playfair flex-1 text-xl italic leading-relaxed text-black">
+                <p
+                  className="font-playfair line-clamp-3 min-h-[4.875rem] flex-1 text-lg italic leading-snug text-black md:min-h-0 md:text-xl md:leading-relaxed md:line-clamp-none"
+                  title={t.quote}
+                >
                   &quot;{t.quote}&quot;
                 </p>
               </div>
             </div>
           ))}
         </div>
-        <div className="flex flex-wrap justify-center gap-4">
-          <p className="mb-2 w-full text-center label-caps text-stone-600">Podziel się opinią</p>
+        <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4">
+          <p className="mb-1 w-full text-center label-caps text-stone-600 sm:mb-2">Podziel się opinią</p>
           <a
-            className="inline-flex min-h-12 items-center justify-center border border-black px-8 py-3 text-center text-[10px] font-bold uppercase leading-snug tracking-widest text-black transition-colors hover:bg-black hover:text-white"
+            className="inline-flex min-h-11 items-center justify-center border border-black px-6 py-2.5 text-center text-[9px] font-bold uppercase leading-snug tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white md:min-h-12 md:px-8 md:py-3 md:text-[10px] md:tracking-widest"
             href="#"
           >
             Oceń nas na Google
           </a>
           <a
-            className="inline-flex min-h-12 items-center justify-center border border-black px-8 py-3 text-center text-[10px] font-bold uppercase leading-snug tracking-widest text-black transition-colors hover:bg-black hover:text-white"
+            className="inline-flex min-h-11 items-center justify-center border border-black px-6 py-2.5 text-center text-[9px] font-bold uppercase leading-snug tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white md:min-h-12 md:px-8 md:py-3 md:text-[10px] md:tracking-widest"
             href="#"
           >
             Zostaw opinię na Booksy

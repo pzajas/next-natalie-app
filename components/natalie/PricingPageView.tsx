@@ -3,6 +3,17 @@
 import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
+  innerPageChipSectionClass,
+  innerPageChipStripClass,
+  innerPageContentInnerClass,
+  innerPageContentSectionClass,
+  innerPageEmptyStateClass,
+  innerPageHeroRowClass,
+  innerPageHeroSectionClass,
+  innerPageTitleClass,
+  innerPageToolsSlotClass,
+} from "@/lib/inner-page-layout";
+import {
   type PricingCategory,
   type PricingCategoryId,
   pricingCategories,
@@ -140,11 +151,11 @@ export function PricingPageView() {
 
   return (
     <>
-      <section className="border-b border-black/5 bg-white py-[60px]">
+      <section className={innerPageHeroSectionClass}>
         <ContentContainer>
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <h1 className="section-title max-w-xl">Cennik</h1>
-            <div className="relative w-full max-w-md shrink-0">
+          <div className={innerPageHeroRowClass}>
+            <h1 className={innerPageTitleClass}>Cennik</h1>
+            <div className={innerPageToolsSlotClass}>
               <Search
                 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500"
                 strokeWidth={1.5}
@@ -163,7 +174,7 @@ export function PricingPageView() {
         </ContentContainer>
       </section>
 
-      <section className="border-b border-black/5 bg-white py-6" aria-label="Filtry kategorii">
+      <section className={innerPageChipSectionClass} aria-label="Filtry kategorii">
         <ContentContainer>
           <div
             ref={chipStripRef}
@@ -173,7 +184,7 @@ export function PricingPageView() {
             onPointerCancel={onChipStripPointerUp}
             onLostPointerCapture={onChipStripLostPointerCapture}
             onClickCapture={onChipStripClickCapture}
-            className="flex w-full cursor-grab select-none flex-nowrap items-stretch gap-2 overflow-x-auto overflow-y-hidden pb-1 scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden md:mx-auto md:grid md:w-full md:max-w-[1200px] md:cursor-default md:gap-1 md:overflow-visible md:select-auto md:[grid-template-columns:repeat(var(--pricing-chip-cols),minmax(0,1fr))] md:active:cursor-default"
+            className={innerPageChipStripClass}
             style={{ ["--pricing-chip-cols" as string]: String(chipCount) }}
             aria-label="Kategorie usług — na małym ekranie przewiń lub przeciągnij"
           >
@@ -208,12 +219,12 @@ export function PricingPageView() {
         </ContentContainer>
       </section>
 
-      <section className="bg-white py-[60px]" aria-label="Lista usług i ceny">
+      <section className={innerPageContentSectionClass} aria-label="Lista usług i ceny">
         <ContentContainer>
           {filteredCategories.length === 0 ? (
-            <p className="text-center text-sm text-stone-500">Brak usług spełniających kryteria.</p>
+            <p className={innerPageEmptyStateClass}>Brak usług spełniających kryteria.</p>
           ) : (
-            <div className="space-y-16">
+            <div className={`${innerPageContentInnerClass} space-y-16`}>
               {filteredCategories.map((cat) => {
                 const open = openMap[cat.id] !== false;
                 return (
@@ -239,7 +250,7 @@ export function PricingPageView() {
                       </button>
                     </h2>
                     {open ? (
-                      <div className="max-w-4xl divide-y divide-black/10">
+                      <div className="divide-y divide-black/10">
                         {cat.services.map((s) => (
                           <PricingServiceRow key={s.id} service={s} />
                         ))}

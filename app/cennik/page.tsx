@@ -11,7 +11,7 @@ export default function CennikPage() {
   return (
     <>
       <MainHeader />
-      <main className="pt-24">
+      <main>
         <PricingPageView />
       </main>
       <MainFooter />

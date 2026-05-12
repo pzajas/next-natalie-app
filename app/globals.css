@@ -33,12 +33,6 @@
   a[aria-disabled="true"] {
     cursor: not-allowed;
   }
-
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
-  }
 }
 
 h1,
@@ -47,6 +41,28 @@ h3,
 .serif-font {
   font-family: var(--font-serif), ui-serif, Georgia, serif;
   letter-spacing: -0.02em;
+}
+
+@keyframes page-route-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/**
+ * Poza @layer — żeby Tailwind nie nadpisywał / nie pomijał animacji przy klienckiej nawigacji.
+ */
+[data-page-route-shell] {
+  animation: page-route-enter 1s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-page-route-shell] {
+    animation: none;
+  }
 }
 
 @layer utilities {
@@ -168,18 +184,53 @@ h3,
   }
 
   /**
-   * Galeria: domyślnie czarno-biało, po najechaniu pełny kolor.
-   * Czas animacji filtra + scale: na elemencie Image (`transition-[filter,transform]`).
-   * Bez efektu na urządzeniach bez hover (dotyk) i przy prefers-reduced-motion.
+   * Galeria / hero: desktop (md+) — czarno-biało, kolor po hover / focus-within.
+   * Mobile (max-md) — domyślnie szarość; tap przełącza atrybut data-color-reveal (komponent kliencki).
    */
-  @media (hover: hover) and (pointer: fine) {
+  @media (min-width: 768px) and (hover: hover) and (pointer: fine) {
     @media (prefers-reduced-motion: no-preference) {
       .gallery-color-reveal-target :where(img) {
         filter: grayscale(1);
       }
 
-      .gallery-color-reveal-target:is(:hover, :focus-visible) :where(img) {
+      .gallery-color-reveal-target:is(:hover, :focus-within) :where(img) {
         filter: grayscale(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-color-reveal-target :where(img) {
+        filter: grayscale(1);
+        transition: none;
+      }
+
+      .gallery-color-reveal-target:is(:hover, :focus-within) :where(img) {
+        filter: grayscale(0);
+        transition: none;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    @media (prefers-reduced-motion: no-preference) {
+      .gallery-color-reveal-target:not([data-color-reveal="on"]) :where(img) {
+        filter: grayscale(1);
+      }
+
+      .gallery-color-reveal-target[data-color-reveal="on"] :where(img) {
+        filter: grayscale(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-color-reveal-target:not([data-color-reveal="on"]) :where(img) {
+        filter: grayscale(1);
+        transition: none;
+      }
+
+      .gallery-color-reveal-target[data-color-reveal="on"] :where(img) {
+        filter: grayscale(0);
+        transition: none;
       }
     }
   }

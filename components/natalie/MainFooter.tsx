@@ -1,10 +1,12 @@
-import { Baby, Car, CreditCard, Mail, MapPin, PawPrint, Phone } from "lucide-react";
+import type { ReactNode, SVGProps } from "react";
+import { Fragment } from "react";
+import { Baby, Calendar, Car, CreditCard, Mail, MapPin, PawPrint, Phone, Store } from "lucide-react";
+import { salonSocialLinks } from "@/lib/social-links";
 import { ContentContainer } from "./ContentContainer";
 
 /** Uzupełnij prawdziwymi danymi salonu w Oświęcimiu. */
 const siteContact = {
   studio: "NATALIE",
-  tagline: "Fryzjerstwo · Oświęcim",
   addressLines: ["Oświęcim"],
   phoneDisplay: "+48 33 000 00 00",
   phoneHref: "tel:+48330000000",
@@ -13,13 +15,13 @@ const siteContact = {
 } as const;
 
 const openingHours = [
-  { day: "Poniedziałek", hours: "12:00 – 20:00", emphasized: true },
-  { day: "Wtorek", hours: "08:30 – 16:00", emphasized: false },
-  { day: "Środa", hours: "12:00 – 20:00", emphasized: false },
-  { day: "Czwartek", hours: "08:30 – 16:00", emphasized: false },
-  { day: "Piątek", hours: "12:00 – 20:00", emphasized: false },
-  { day: "Sobota", hours: "08:00 – 13:00", emphasized: false },
-  { day: "Niedziela", hours: "Zamknięte", emphasized: false },
+  { day: "Poniedziałek", dayShort: "Pon.", hours: "12:00 – 20:00", emphasized: false },
+  { day: "Wtorek", dayShort: "Wt.", hours: "08:30 – 16:00", emphasized: false },
+  { day: "Środa", dayShort: "Śr.", hours: "12:00 – 20:00", emphasized: false },
+  { day: "Czwartek", dayShort: "Czw.", hours: "08:30 – 16:00", emphasized: false },
+  { day: "Piątek", dayShort: "Pt.", hours: "12:00 – 20:00", emphasized: false },
+  { day: "Sobota", dayShort: "Sob.", hours: "08:00 – 13:00", emphasized: false },
+  { day: "Niedziela", dayShort: "Nd.", hours: "Zamknięte", emphasized: false },
 ] as const;
 
 const amenities = [
@@ -31,9 +33,9 @@ const amenities = [
 
 function AmenitiesList() {
   return (
-    <ul className="flex flex-col gap-1.5 md:gap-2">
+    <ul className="grid grid-cols-2 gap-2 md:flex md:flex-col md:gap-2">
       {amenities.map(({ icon: Icon, label }) => (
-        <li key={label}>
+        <li key={label} className="min-w-0 md:w-full">
           <div className="flex min-h-9 items-center gap-2 border border-black/10 bg-atelier-light/40 px-2.5 py-1.5 md:min-h-10 md:gap-2.5 md:px-3 md:py-2">
             <Icon className="h-4 w-4 shrink-0 text-atelier-dark" strokeWidth={1.5} aria-hidden />
             <span className="text-xs font-medium leading-snug text-black md:text-sm">{label}</span>
@@ -44,13 +46,157 @@ function AmenitiesList() {
   );
 }
 
+const externalLinkProps = { target: "_blank", rel: "noopener noreferrer" } as const;
+
+/** Jedna linia godzin (mobile, prawa kolumna) — divy, żeby dało się zipować z kontaktem w jednej siatce. */
+function FooterMobileHoursCompactRow({
+  dayShort,
+  hours,
+}: {
+  dayShort: string;
+  hours: string;
+}) {
+  return (
+    <div className="flex w-full items-center justify-end gap-x-2 py-0.5 text-right text-[11px] leading-snug text-stone-700">
+      <span className="shrink-0">{dayShort}</span>
+      <span className="shrink-0 tabular-nums">{hours}</span>
+    </div>
+  );
+}
+
+/** Obrys jak ikony Lucide (`strokeWidth` 1.5) — spójnie z MapPin / Phone / Mail. */
+function FacebookIconOutline(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...props}
+    >
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function InstagramIconOutline(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.25}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      {...props}
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <circle cx="12" cy="12" r="4" />
+    </svg>
+  );
+}
+
+/** Wiersz kontaktu na mobile: ikona + treść, wyrównanie do lewej, ten sam rytm pionowy co godziny (`gap-2`). */
+function FooterContactMobileRow({ icon, children }: { icon: ReactNode; children: ReactNode }) {
+  return (
+    <div className="flex w-full items-center justify-start gap-2 py-0.5 text-left text-[11px] leading-snug text-stone-700">
+      <span className="flex h-4 w-4 shrink-0 items-center justify-center text-atelier-dark [&>svg]:h-3.5 [&>svg]:w-3.5 [&>svg]:shrink-0" aria-hidden>
+        {icon}
+      </span>
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
+  );
+}
+
+const footerMobileContactLinkClass =
+  "text-[11px] font-normal text-black transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black/35";
+const footerMobileOutlineIconClass = "h-3.5 w-3.5 shrink-0 text-atelier-dark";
+
+/** Mobile: jedna siatka — każdy wiersz to ta sama linia: kontakt | godziny. */
+function FooterMobileContactHoursGrid({ headingClass }: { headingClass: string }) {
+  function contactCell(rowIndex: number) {
+    switch (rowIndex) {
+      case 0:
+        return (
+          <FooterContactMobileRow icon={<Store className="text-atelier-dark" strokeWidth={1.25} aria-hidden />}>
+            <span className="font-playfair text-[11px] font-normal tracking-tight text-stone-700">{siteContact.studio}</span>
+          </FooterContactMobileRow>
+        );
+      case 1:
+        return (
+          <FooterContactMobileRow icon={<MapPin strokeWidth={1.25} aria-hidden />}>
+            <span>{siteContact.addressLines[0]}</span>
+          </FooterContactMobileRow>
+        );
+      case 2:
+        return (
+          <FooterContactMobileRow icon={<Phone strokeWidth={1.25} aria-hidden />}>
+            <a className={`${footerMobileContactLinkClass} tabular-nums`} href={siteContact.phoneHref}>
+              {siteContact.phoneDisplay}
+            </a>
+          </FooterContactMobileRow>
+        );
+      case 3:
+        return (
+          <FooterContactMobileRow icon={<Mail strokeWidth={1.25} aria-hidden />}>
+            <a className={`${footerMobileContactLinkClass} break-all`} href={siteContact.emailHref}>
+              {siteContact.emailDisplay}
+            </a>
+          </FooterContactMobileRow>
+        );
+      case 4:
+        return (
+          <FooterContactMobileRow icon={<FacebookIconOutline className={footerMobileOutlineIconClass} />}>
+            <a className={footerMobileContactLinkClass} href={salonSocialLinks.facebook} aria-label="Facebook (nowa karta)" {...externalLinkProps}>
+              Facebook
+            </a>
+          </FooterContactMobileRow>
+        );
+      case 5:
+        return (
+          <FooterContactMobileRow icon={<InstagramIconOutline className={footerMobileOutlineIconClass} />}>
+            <a className={footerMobileContactLinkClass} href={salonSocialLinks.instagram} aria-label="Instagram (nowa karta)" {...externalLinkProps}>
+              Instagram
+            </a>
+          </FooterContactMobileRow>
+        );
+      case 6:
+        return (
+          <FooterContactMobileRow icon={<Calendar className={footerMobileOutlineIconClass} strokeWidth={1.25} aria-hidden />}>
+            <a className={footerMobileContactLinkClass} href={salonSocialLinks.booksy} aria-label="Booksy (nowa karta)" {...externalLinkProps}>
+              Booksy
+            </a>
+          </FooterContactMobileRow>
+        );
+      default:
+        return null;
+    }
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+      <h2 className={headingClass}>Kontakt</h2>
+      <h2 className={`${headingClass} text-right`}>Godziny otwarcia</h2>
+      {openingHours.map((h, i) => (
+        <Fragment key={h.day}>
+          {contactCell(i)}
+          <FooterMobileHoursCompactRow dayShort={h.dayShort} hours={h.hours} />
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+
 function ContactBody() {
   return (
     <>
       <p className="font-playfair text-2xl tracking-tight text-black md:text-[1.375rem] md:leading-tight">{siteContact.studio}</p>
-      <p className="mt-1 text-sm text-stone-600">{siteContact.tagline}</p>
-      <div className="mt-4 space-y-3 text-sm text-stone-800 md:mt-5 md:space-y-3">
-        <p className="flex min-h-9 items-center justify-center gap-2 md:min-h-10 md:justify-start">
+      <div className="mt-3 space-y-2.5 text-sm text-stone-800 md:mt-5 md:space-y-3">
+        <p className="flex min-h-9 items-center justify-start gap-2 md:min-h-10">
           <MapPin className="h-4 w-4 shrink-0 text-atelier-dark" strokeWidth={1.5} aria-hidden />
           <span className="text-left leading-snug">
             {siteContact.addressLines.map((line) => (
@@ -60,22 +206,52 @@ function ContactBody() {
             ))}
           </span>
         </p>
-        <p className="flex min-h-9 items-center justify-center gap-2 md:min-h-10 md:justify-start">
+        <p className="flex min-h-9 items-center justify-start gap-2 md:min-h-10">
           <Phone className="h-4 w-4 shrink-0 text-atelier-dark" strokeWidth={1.5} aria-hidden />
           <a
-            className="border-b border-black/20 font-medium tabular-nums text-black transition-colors hover:border-black"
+            className="border-b border-black/20 font-normal tabular-nums text-black transition-colors hover:border-black"
             href={siteContact.phoneHref}
           >
             {siteContact.phoneDisplay}
           </a>
         </p>
-        <p className="flex min-h-9 items-center justify-center gap-2 md:min-h-10 md:justify-start">
+        <p className="flex min-h-9 items-center justify-start gap-2 md:min-h-10">
           <Mail className="h-4 w-4 shrink-0 text-atelier-dark" strokeWidth={1.5} aria-hidden />
           <a
-            className="break-all border-b border-black/20 font-medium text-black transition-colors hover:border-black"
+            className="break-all border-b border-black/20 font-normal text-black transition-colors hover:border-black"
             href={siteContact.emailHref}
           >
             {siteContact.emailDisplay}
+          </a>
+        </p>
+        <p className="flex min-h-9 items-center justify-start gap-2 md:min-h-10">
+          <a
+            className="border-b border-black/20 font-normal text-black transition-colors hover:border-black"
+            href={salonSocialLinks.facebook}
+            aria-label="Facebook (nowa karta)"
+            {...externalLinkProps}
+          >
+            Facebook
+          </a>
+        </p>
+        <p className="flex min-h-9 items-center justify-start gap-2 md:min-h-10">
+          <a
+            className="border-b border-black/20 font-normal text-black transition-colors hover:border-black"
+            href={salonSocialLinks.instagram}
+            aria-label="Instagram (nowa karta)"
+            {...externalLinkProps}
+          >
+            Instagram
+          </a>
+        </p>
+        <p className="flex min-h-9 items-center justify-start gap-2 md:min-h-10">
+          <a
+            className="border-b border-black/20 font-normal text-black transition-colors hover:border-black"
+            href={salonSocialLinks.booksy}
+            aria-label="Booksy (nowa karta)"
+            {...externalLinkProps}
+          >
+            Booksy
           </a>
         </p>
       </div>
@@ -83,16 +259,16 @@ function ContactBody() {
   );
 }
 
-function OpeningHoursList() {
+function OpeningHoursList({ shortDayLabels = false }: { shortDayLabels?: boolean }) {
   return (
-    <dl className="flex flex-col gap-1.5 md:gap-2">
-      {openingHours.map(({ day, hours, emphasized }) => (
+    <dl className="flex flex-col gap-0.5 md:gap-1.5">
+      {openingHours.map(({ day, dayShort, hours, emphasized }) => (
         <div
           key={day}
-          className={`grid min-h-9 grid-cols-[1fr_auto] items-center gap-x-6 md:min-h-10 md:gap-x-8 ${emphasized ? "font-semibold text-black" : "text-stone-700"}`}
+          className={`flex items-baseline gap-x-1.5 leading-tight md:min-h-10 md:w-full md:justify-between md:gap-x-6 lg:gap-x-8 ${emphasized ? "text-black" : "text-stone-700"}`}
         >
-          <dt className="text-left text-sm">{day}</dt>
-          <dd className="text-right text-sm tabular-nums">{hours}</dd>
+          <dt className="shrink-0 text-left text-xs md:text-sm">{shortDayLabels ? dayShort : day}</dt>
+          <dd className="shrink-0 text-right text-xs tabular-nums md:text-sm">{hours}</dd>
         </div>
       ))}
     </dl>
@@ -105,23 +281,16 @@ export function MainFooter() {
   return (
     <footer
       id="kontakt"
-      className="scroll-mt-28 border-t border-stone-100 bg-white py-[60px]"
+      className="scroll-mt-28 border-t border-stone-100 bg-white pt-10 pb-0 md:pt-[60px] md:pb-0"
       data-purpose="site-footer"
     >
       <ContentContainer>
-        {/* Mobile: sekcja + nagłówek razem */}
-        <div className="flex flex-col gap-14 md:hidden">
-          <div className="mx-auto w-full max-w-54">
-            <h2 className={`${headingClass} mb-6`}>Udogodnienia</h2>
+        {/* Mobile: kontakt + godziny obok, udogodnienia na dole w 2×2 */}
+        <div className="flex flex-col gap-8 md:hidden">
+          <FooterMobileContactHoursGrid headingClass={headingClass} />
+          <div className="w-full">
+            <h2 className={`${headingClass} mb-3 text-center`}>Udogodnienia</h2>
             <AmenitiesList />
-          </div>
-          <div className="mx-auto w-full max-w-sm text-center">
-            <h2 className={`${headingClass} mb-6`}>Kontakt</h2>
-            <ContactBody />
-          </div>
-          <div className="mx-auto w-full max-w-xs text-center">
-            <h2 className={`${headingClass} mb-6`}>Godziny otwarcia</h2>
-            <OpeningHoursList />
           </div>
         </div>
 
@@ -144,6 +313,10 @@ export function MainFooter() {
             </div>
           </div>
         </div>
+
+        <p className="mt-8 border-t border-stone-100 py-5 text-center text-[11px] leading-snug text-stone-500 md:mt-10 md:py-6">
+          © {new Date().getFullYear()} NATALIE. Wszelkie prawa zastrzeżone.
+        </p>
       </ContentContainer>
     </footer>
   );
