@@ -27,9 +27,7 @@ export function GalleryEditorialGrid({
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [lightboxEntered, setLightboxEntered] = useState(false);
   const [lightboxPortalReady, setLightboxPortalReady] = useState(false);
-  const closeTimeoutRef = useRef<ReturnType<typeof window.setTimeout> | null>(
-    null,
-  );
+  const closeTimeoutRef = useRef<number | null>(null);
   const lightboxTriggerRef = useRef<HTMLElement | null>(null);
   const hadLightboxRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
