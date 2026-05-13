@@ -4,16 +4,15 @@ import type { ReactNode } from "react";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
-/** Jak karty w `PricingServiceRow`: cienka ramka, białe tło, hover na obrębie i cieniu. */
+/** Jak karty w `PricingServiceRow`: ramka, powierzchnia, spokojny hover. */
 const socialButtonClass =
-  "flex w-full min-h-10 items-center justify-center gap-2 border border-black/8 bg-white px-3 py-2.5 text-[13px] font-medium leading-tight text-black transition-all duration-300 outline-none hover:border-black/20 hover:shadow-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black/35 sm:gap-2.5 sm:text-sm md:min-h-14 md:px-5 md:py-3.5";
+  "flex w-full min-h-10 items-center justify-center gap-2 border border-white/[0.08] bg-atelier-surface-elevated px-3 py-2.5 text-[13px] font-medium leading-tight text-atelier-text transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] outline-none hover:border-atelier-accent/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-atelier-accent/45 sm:gap-2.5 sm:text-sm md:min-h-14 md:px-5 md:py-3.5";
 
 const iconWrapClass =
-  "flex h-4 w-4 shrink-0 items-center justify-center text-stone-800 md:h-5 md:w-5";
+  "flex h-4 w-4 shrink-0 items-center justify-center text-atelier-text-secondary md:h-5 md:w-5";
 
-/** Kwadratowa marka (litera w ramce) — czytelniej „app tile” niż okrągły glyph SI. */
 const squareMarkClass =
-  "flex aspect-square h-full w-full items-center justify-center rounded-sm border-2 border-stone-800";
+  "flex aspect-square h-full w-full items-center justify-center rounded-sm border-2 border-white/15";
 
 function SocialButton({
   href,
@@ -37,7 +36,7 @@ function SocialButton({
 export function SalonSocialLinks() {
   return (
     <div className="pt-1">
-      <p className="label-caps mb-2.5 text-stone-700 md:mb-3">Znajdź nas</p>
+      <p className="label-caps mb-2.5 md:mb-3">Znajdź nas</p>
       <nav
         aria-label="Media społecznościowe salonu"
         className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 sm:gap-3 md:gap-4"

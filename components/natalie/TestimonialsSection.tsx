@@ -1,5 +1,6 @@
 "use client";
 
+import { ctaEditorialGhost, ctaEditorialPrimary } from "@/lib/cta-classes";
 import { Star } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ContentContainer } from "./ContentContainer";
@@ -7,32 +8,32 @@ import { ContentContainer } from "./ContentContainer";
 const testimonials = [
   {
     quote:
-      "Wyszlam i od razu wiedzialam, ze to moje wlosy - lekkie, naturalne, bez przerysowania.",
-    author: "Elzbieta",
+      "Wyszłam i od razu wiedziałam, że to moje włosy — lekkie, naturalne, bez przerysowania.",
+    author: "Elżbieta",
   },
   {
     quote:
-      "Super konsultacja i jeszcze lepszy efekt. Fryzura uklada sie sama, nawet bez stylizacji.",
+      "Super konsultacja i jeszcze lepszy efekt. Fryzura układa się sama, nawet bez stylizacji.",
     author: "Angelika",
   },
   {
     quote:
-      "Dokladnie taki balans: nowoczesnie, ale nadal po mojemu. Wroce na pewno.",
+      "Dokładnie taki balans: nowocześnie, ale nadal po mojemu. Wrócę na pewno.",
     author: "Maciej",
   },
   {
     quote:
-      "Wlosy wygladaja premium, ale nadal naturalnie. To nie jest efekt tylko na jedno zdjecie.",
+      "Włosy wyglądają premium, ale nadal naturalnie. To nie jest efekt tylko na jedno zdjęcie.",
     author: "Dominika",
   },
   {
     quote:
-      "Kolor dobrany idealnie do karnacji. Minal miesiac, a fryzura dalej trzyma forme.",
+      "Kolor dobrany idealnie do karnacji. Minął miesiąc, a fryzura dalej trzyma formę.",
     author: "Katarzyna",
   },
   {
     quote:
-      "Pierwsza wizyta i totalny spokoj. Wiedzialam, ze jestem w dobrych rekach.",
+      "Pierwsza wizyta i totalny spokój. Wiedziałam, że jestem w dobrych rękach.",
     author: "Zuzanna",
   },
   {
@@ -42,27 +43,27 @@ const testimonials = [
   },
   {
     quote:
-      "Bardzo dobry rytm wizyty: konsultacja, ciecie, finalny efekt. Bez chaosu i pospiechu.",
+      "Bardzo dobry rytm wizyty: konsultacja, cięcie, finalny efekt. Bez chaosu i pośpiechu.",
     author: "Gloria",
   },
   {
     quote:
-      "Efekt koncowy byl nawet lepszy niz inspiracja. Bardzo swiadoma praca na detalu.",
+      "Efekt końcowy był nawet lepszy niż inspiracja. Bardzo świadoma praca na detalu.",
     author: "Julia",
   },
   {
     quote:
-      "Szybko, ale bez kompromisu w jakosci. Dokladnie tego potrzebowalam.",
+      "Szybko, ale bez kompromisu w jakości. Dokładnie tego potrzebowałam.",
     author: "Ewa",
   },
   {
     quote:
-      "Atmosfera butikowa, a efekt bardzo noszalny. To jest poziom duzego miasta.",
+      "Atmosfera butikowa, a efekt bardzo nośny. To jest poziom dużego miasta.",
     author: "Izabela",
   },
   {
     quote:
-      "Bylam z corka i obie wyszlysmy zachwycone. Delikatnie, cierpliwie i bardzo estetycznie.",
+      "Byłam z córką i obie wyszłyśmy zachwycone. Delikatnie, cierpliwie i bardzo estetycznie.",
     author: "Klientka",
   },
   {
@@ -72,12 +73,12 @@ const testimonials = [
   },
   {
     quote:
-      "Kolejna wizyta i znow to samo: swietne ciecie, luz i wysoka kultura pracy.",
+      "Kolejna wizyta i znów to samo: świetne cięcie, luz i wysoka kultura pracy.",
     author: "Mariusz",
   },
   {
     quote:
-      "Podejscie do dziecka perfekcyjne. Zero stresu, tylko spokoj i profesjonalizm.",
+      "Podejście do dziecka perfekcyjne. Zero stresu, tylko spokój i profesjonalizm.",
     author: "Paulina",
   },
   {
@@ -87,122 +88,208 @@ const testimonials = [
   },
   {
     quote:
-      "Koloryzacja wyszla dokladnie taka, jakiej chcialam: miekka, swieza i bez ostrej granicy.",
+      "Koloryzacja wyszła dokładnie tak, jak chciałam: miękka, świeża i bez ostrej granicy.",
     author: "Mirela",
   },
   {
     quote:
-      "Pierwsza wizyta i od razu poczucie, ze to moje miejsce. Bardzo premium doswiadczenie.",
+      "Pierwsza wizyta i od razu poczucie, że to moje miejsce. Bardzo premium doświadczenie.",
     author: "Renata",
   },
 ] as const;
 
-export function TestimonialsSection() {
-  const [page, setPage] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
+const SLOT_COUNT = 3;
+/** Dłuższe fazy + `ease-in-out` — wcześniejszy easing „zjadał” większość ruchu na początku 2 s. */
+const FADE_MS = 2000;
+const HOLD_MS = 6000;
 
-  const groups = useMemo(() => {
-    const result: (typeof testimonials)[number][][] = [];
-    for (let i = 0; i < testimonials.length; i += 3) {
-      result.push(
-        testimonials.slice(i, i + 3) as (typeof testimonials)[number][],
-      );
+function nextIndexAvoidingPeers(
+  slot: number,
+  prevIndices: readonly number[],
+  len: number,
+): number {
+  const others = new Set<number>();
+  for (let i = 0; i < SLOT_COUNT; i++) {
+    if (i !== slot) {
+      others.add(prevIndices[i]!);
     }
-    return result;
-  }, []);
+  }
+  let candidate = (prevIndices[slot]! + 1) % len;
+  let guard = 0;
+  while (others.has(candidate) && guard < len) {
+    candidate = (candidate + 1) % len;
+    guard++;
+  }
+  return candidate;
+}
+
+function TestimonialCardBody({
+  t,
+  contentOpacity,
+}: {
+  t: (typeof testimonials)[number];
+  contentOpacity: number;
+}) {
+  return (
+    <div
+      className="transition-opacity ease-in-out motion-reduce:transition-none"
+      style={{
+        opacity: contentOpacity,
+        transitionDuration: `${FADE_MS}ms`,
+      }}
+    >
+      <div className="mb-3 flex items-center justify-between md:mb-4">
+        <p className="text-sm font-semibold text-atelier-text">{t.author}</p>
+        <div className="flex items-center gap-1" aria-label="Ocena 5 na 5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              className="h-3.5 w-3.5 text-atelier-accent"
+              strokeWidth={1.75}
+              fill="none"
+              aria-hidden
+            />
+          ))}
+        </div>
+      </div>
+      <div className="flex min-h-0 flex-1 flex-col">
+        <p
+          className="font-playfair line-clamp-3 min-h-[4.875rem] flex-1 text-lg italic leading-snug text-atelier-text md:min-h-0 md:text-xl md:leading-relaxed md:line-clamp-none"
+          title={t.quote}
+        >
+          &quot;{t.quote}&quot;
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function TestimonialsSection() {
+  const len = testimonials.length;
+  const initialIndices = useMemo(() => {
+    const base = [0, 1, 2] as number[];
+    if (len >= SLOT_COUNT) {
+      return base;
+    }
+    return Array.from({ length: SLOT_COUNT }, (_, i) => i % len);
+  }, [len]);
+
+  const [indices, setIndices] = useState<number[]>(() => [...initialIndices]);
+  const [contentOpacity, setContentOpacity] = useState<number[]>(() =>
+    Array.from({ length: SLOT_COUNT }, () => 1),
+  );
 
   useEffect(() => {
-    if (groups.length <= 1) {
+    if (len < 1) {
       return;
     }
 
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduce.matches) {
+      return;
+    }
 
-    const intervalId = setInterval(() => {
-      setIsVisible(false);
+    let cancelled = false;
+    const timeouts: number[] = [];
+    let slot = 0;
 
-      timeoutId = setTimeout(() => {
-        setPage((prevPage) => (prevPage + 1) % groups.length);
-        setIsVisible(true);
-      }, 500);
-    }, 10000);
+    const later = (fn: () => void, ms: number) => {
+      const id = window.setTimeout(() => {
+        const idx = timeouts.indexOf(id);
+        if (idx >= 0) {
+          timeouts.splice(idx, 1);
+        }
+        if (!cancelled) {
+          fn();
+        }
+      }, ms);
+      timeouts.push(id);
+    };
+
+    const rotateOne = () => {
+      const s = slot % SLOT_COUNT;
+      later(() => {
+        setContentOpacity((o) => {
+          const n = [...o];
+          n[s] = 0;
+          return n;
+        });
+      }, 0);
+
+      later(() => {
+        setIndices((prev) => {
+          const n = [...prev];
+          n[s] = nextIndexAvoidingPeers(s, prev, len);
+          return n;
+        });
+        setContentOpacity((o) => {
+          const n = [...o];
+          n[s] = 1;
+          return n;
+        });
+        slot += 1;
+        later(rotateOne, FADE_MS + HOLD_MS);
+      }, FADE_MS);
+    };
+
+    later(rotateOne, HOLD_MS);
 
     return () => {
-      clearInterval(intervalId);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
+      cancelled = true;
+      for (const id of timeouts) {
+        window.clearTimeout(id);
       }
     };
-  }, [groups.length]);
+  }, [len]);
 
   return (
     <section
       id="opinie"
-      className="scroll-mt-28 bg-[#f3efea] py-[40px]"
+      className="scroll-mt-28 bg-atelier-surface py-[40px]"
       data-purpose="testimonials"
     >
       <ContentContainer className="py-0">
         <div className="px-[24px]">
           <div className="mb-8 text-center md:mb-12">
             <h2 className="section-title text-center">Opinie klientów</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-sm font-medium text-stone-700 md:mt-4 md:text-base">
+            <p className="mx-auto mt-3 max-w-2xl text-sm font-medium text-atelier-text-secondary md:mt-4 md:text-base">
               Zweryfikowane opinie z Google i Booksy.
             </p>
           </div>
-          <div
-            className={`mb-8 grid min-h-0 grid-cols-1 items-stretch gap-4 transition-opacity duration-500 ease-in-out md:mb-12 md:grid-cols-3 md:gap-6 ${
-              isVisible ? "opacity-100" : "opacity-0"
-            }`}
-          >
-            {groups[page].map((t) => (
-              <div
-                key={`${t.author}-${t.quote}`}
-                className="flex h-full flex-col border border-black/8 bg-stone-50 p-5 shadow-subtle transition-shadow duration-300 ease-out hover:shadow-[0_28px_52px_-14px_rgba(0,0,0,0.26)] md:min-h-0 md:p-6"
-              >
-                <div className="mb-3 flex items-center justify-between md:mb-4">
-                  <p className="text-sm font-semibold text-black">{t.author}</p>
-                  <div
-                    className="flex items-center gap-1"
-                    aria-label="Ocena 5 na 5"
-                  >
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-3.5 w-3.5 text-black"
-                        strokeWidth={1.75}
-                        fill="none"
-                        aria-hidden
-                      />
-                    ))}
-                  </div>
+          <div className="mb-8 grid min-h-0 grid-cols-1 items-stretch gap-4 md:mb-12 md:grid-cols-3 md:gap-6">
+            {indices.map((ti, slot) => {
+              const t = testimonials[ti]!;
+              return (
+                <div
+                  key={slot}
+                  className="flex h-full flex-col border border-white/[0.08] bg-atelier-surface-elevated p-5 transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-atelier-accent/20 md:min-h-0 md:p-6"
+                >
+                  <TestimonialCardBody
+                    t={t}
+                    contentOpacity={contentOpacity[slot] ?? 1}
+                  />
                 </div>
-                <div className="flex min-h-0 flex-1 flex-col">
-                  <p
-                    className="font-playfair line-clamp-3 min-h-[4.875rem] flex-1 text-lg italic leading-snug text-black md:min-h-0 md:text-xl md:leading-relaxed md:line-clamp-none"
-                    title={t.quote}
-                  >
-                    &quot;{t.quote}&quot;
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-4">
-            <p className="mb-1 w-full text-center label-caps text-stone-600 sm:mb-2">
+          <div className="flex flex-col items-stretch gap-3">
+            <p className="text-center label-caps text-atelier-text-muted">
               Podziel się opinią
             </p>
-            <a
-              className="inline-flex min-h-11 items-center justify-center border border-black px-6 py-2.5 text-center text-[9px] font-bold uppercase leading-snug tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white md:min-h-12 md:px-8 md:py-3 md:text-[10px] md:tracking-widest"
-              href="#"
-            >
-              Oceń nas na Google
-            </a>
-            <a
-              className="inline-flex min-h-11 items-center justify-center border border-black px-6 py-2.5 text-center text-[9px] font-bold uppercase leading-snug tracking-[0.12em] text-black transition-colors hover:bg-black hover:text-white md:min-h-12 md:px-8 md:py-3 md:text-[10px] md:tracking-widest"
-              href="#"
-            >
-              Zostaw opinię na Booksy
-            </a>
+            <div className="grid w-full grid-cols-1 gap-3 sm:mx-auto sm:max-w-2xl sm:grid-cols-2 sm:gap-4">
+              <a
+                className={`inline-flex min-h-11 w-full items-center justify-center px-6 py-2.5 text-center text-[9px] font-bold uppercase leading-snug tracking-[0.12em] md:min-h-12 md:px-8 md:py-3 md:text-[10px] md:tracking-widest ${ctaEditorialPrimary}`}
+                href="#"
+              >
+                Oceń nas na Google
+              </a>
+              <a
+                className={`inline-flex min-h-11 w-full items-center justify-center px-6 py-2.5 text-center text-[9px] font-bold uppercase leading-snug tracking-[0.12em] md:min-h-12 md:px-8 md:py-3 md:text-[10px] md:tracking-widest ${ctaEditorialGhost}`}
+                href="#"
+              >
+                Zostaw opinię na Booksy
+              </a>
+            </div>
           </div>
         </div>
       </ContentContainer>

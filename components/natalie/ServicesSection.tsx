@@ -10,35 +10,35 @@ export function ServicesSection() {
   return (
     <section
       id="uslugi"
-      className="scroll-mt-28 bg-[#f3efea] py-[40px]"
+      className="scroll-mt-28 bg-atelier-surface-secondary py-14 md:py-[4.5rem]"
       data-purpose="service-menu"
     >
       <ContentContainer className="py-0">
-        <div className="mb-8 text-center md:mb-14">
-          <h2 className="section-title text-center">Nasze usługi</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm font-medium leading-relaxed text-stone-700 md:mt-4 md:text-base">
-            Precyzyjne cięcie, nowoczesna koloryzacja i stylizacja, która trzyma
-            formę nawet po kilku tygodniach.
-          </p>
-        </div>
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-6 hidden items-start justify-between md:flex">
-            <span className="label-caps text-stone-600">Usługa i efekt</span>
-            <span className="label-caps min-w-50 text-center text-stone-600">
-              Rezerwacja
-            </span>
+        <div className="px-[24px]">
+          <div className="mb-10 text-center md:mb-16">
+            <h2 className="section-title text-center">Nasze usługi</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-sm font-medium leading-relaxed text-atelier-text-secondary md:mt-5 md:text-base">
+              Precyzyjne cięcie, nowoczesna koloryzacja i stylizacja, która trzyma
+              formę nawet po kilku tygodniach.
+            </p>
           </div>
-          <div className="space-y-3 md:space-y-4">
+          <div className="mb-6 hidden border-b border-white/[0.06] px-4 pb-3 sm:px-6 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-10 md:px-8 md:items-end lg:px-10">
+            <span className="label-caps text-atelier-text-muted">Usługa i efekt</span>
+            <div className="flex justify-end md:min-w-50">
+              <span className="label-caps text-atelier-text-muted">Rezerwacja</span>
+            </div>
+          </div>
+          <div>
             {popularServices.map((service) => (
-              <PricingServiceRow key={service.id} service={service} />
+              <PricingServiceRow key={service.id} service={service} variant="editorial" />
             ))}
           </div>
-        </div>
-        <div className="mx-auto mt-8 max-w-4xl text-center md:mt-12">
-          <SectionTextLink href="/cennik">
-            <span>Sprawdź wszystkie usługi i cennik</span>
-            <span aria-hidden>→</span>
-          </SectionTextLink>
+          <div className="mt-10 text-center md:mt-14">
+            <SectionTextLink href="/cennik">
+              <span>Sprawdź wszystkie usługi i cennik</span>
+              <span aria-hidden>→</span>
+            </SectionTextLink>
+          </div>
         </div>
       </ContentContainer>
     </section>

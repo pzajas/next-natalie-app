@@ -168,7 +168,7 @@ export function PricingPageView() {
             <h1 className={innerPageTitleClass}>Cennik</h1>
             <div className={innerPageToolsSlotClass}>
               <Search
-                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500"
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-atelier-text-muted"
                 strokeWidth={1.5}
                 aria-hidden
               />
@@ -177,7 +177,7 @@ export function PricingPageView() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Szukaj usługi"
-                className="w-full border border-black/15 bg-atelier-light/50 py-2.5 pl-10 pr-4 text-sm text-black outline-none transition-colors placeholder:text-stone-500 focus:border-black/40"
+                className="w-full border border-white/[0.1] bg-atelier-surface-elevated py-2.5 pl-10 pr-4 text-sm text-atelier-text outline-none transition-colors duration-500 placeholder:text-atelier-text-muted focus:border-atelier-accent/50"
                 aria-label="Szukaj usługi"
               />
             </div>
@@ -206,10 +206,10 @@ export function PricingPageView() {
               type="button"
               title="Wszystkie kategorie"
               onClick={() => setCategoryFilter(ALL)}
-              className={`shrink-0 border px-2 py-2.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.08em] transition-colors max-md:whitespace-nowrap md:min-w-0 md:truncate md:px-1.5 md:text-[9px] md:leading-snug ${
+              className={`shrink-0 border px-2 py-2.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.08em] transition-colors duration-500 max-md:whitespace-nowrap md:min-w-0 md:truncate md:px-1.5 md:text-[9px] md:leading-snug ${
                 categoryFilter === ALL
-                  ? "border-black bg-black text-white"
-                  : "border-black/15 bg-transparent text-stone-600 hover:border-black/40 hover:text-black"
+                  ? "border-atelier-accent bg-atelier-surface-elevated text-atelier-text"
+                  : "border-white/10 bg-transparent text-atelier-text-muted hover:border-atelier-accent/40 hover:text-atelier-text"
               }`}
             >
               Wszystkie
@@ -220,10 +220,10 @@ export function PricingPageView() {
                 type="button"
                 title={c.name}
                 onClick={() => setCategoryFilter(c.id)}
-                className={`shrink-0 border px-2 py-2.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.08em] transition-colors max-md:whitespace-nowrap md:min-w-0 md:truncate md:px-1.5 md:text-[9px] md:leading-snug ${
+                className={`shrink-0 border px-2 py-2.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.08em] transition-colors duration-500 max-md:whitespace-nowrap md:min-w-0 md:truncate md:px-1.5 md:text-[9px] md:leading-snug ${
                   categoryFilter === c.id
-                    ? "border-black bg-black text-white"
-                    : "border-black/15 bg-transparent text-stone-600 hover:border-black/40 hover:text-black"
+                    ? "border-atelier-accent bg-atelier-surface-elevated text-atelier-text"
+                    : "border-white/10 bg-transparent text-atelier-text-muted hover:border-atelier-accent/40 hover:text-atelier-text"
                 }`}
               >
                 {c.name}
@@ -252,33 +252,33 @@ export function PricingPageView() {
                       <button
                         type="button"
                         onClick={() => toggleCategory(cat.id)}
-                        className="flex w-full items-center justify-between gap-4 border-b border-black/10 pb-4 text-left transition-opacity hover:opacity-80"
+                        className="flex w-full items-center justify-between gap-4 border-b border-white/[0.08] pb-4 text-left transition-opacity duration-500 hover:opacity-80"
                         aria-expanded={open}
                       >
                         <span className="flex min-w-0 items-center gap-3">
                           {open ? (
                             <ChevronUp
-                              className="h-5 w-5 shrink-0 text-stone-500"
+                              className="h-5 w-5 shrink-0 text-atelier-text-muted"
                               strokeWidth={1.5}
                             />
                           ) : (
                             <ChevronDown
-                              className="h-5 w-5 shrink-0 text-stone-500"
+                              className="h-5 w-5 shrink-0 text-atelier-text-muted"
                               strokeWidth={1.5}
                             />
                           )}
-                          <span className="text-2xl text-black">
+                          <span className="text-2xl text-atelier-text">
                             {cat.name}
                           </span>
                         </span>
-                        <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                        <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.14em] text-atelier-text-muted">
                           {cat.services.length}{" "}
                           {uslugLabel(cat.services.length)}
                         </span>
                       </button>
                     </h2>
                     {open ? (
-                      <div className="divide-y divide-black/10">
+                      <div className="divide-y divide-white/[0.06]">
                         {cat.services.map((s) => (
                           <PricingServiceRow key={s.id} service={s} />
                         ))}

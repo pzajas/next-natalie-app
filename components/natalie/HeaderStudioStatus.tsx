@@ -34,8 +34,8 @@ export function HeaderStudioStatus() {
   if (open) {
     return (
       <span className="hidden items-center gap-2 md:inline-flex" title="Godziny otwarcia: 9:00–19:00">
-        <span className="h-2 w-2 shrink-0 rounded-full bg-black" aria-hidden />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-600">
+        <span className="h-2 w-2 shrink-0 rounded-full bg-atelier-accent" aria-hidden />
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-atelier-text-secondary">
           Otwarte teraz
         </span>
       </span>
@@ -43,7 +43,7 @@ export function HeaderStudioStatus() {
   }
 
   return (
-    <span className="hidden items-center gap-1.5 text-stone-500 md:inline-flex" title="Godziny pracy salonu">
+    <span className="hidden items-center gap-1.5 text-atelier-text-muted md:inline-flex" title="Godziny pracy salonu">
       <Clock className="h-3.5 w-3.5 shrink-0 stroke-[1.5]" aria-hidden />
       <span className="text-[10px] font-semibold uppercase tracking-[0.14em]">9:00–19:00</span>
     </span>

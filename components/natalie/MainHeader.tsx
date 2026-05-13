@@ -1,6 +1,11 @@
 "use client";
 
-import { maybeSmoothScrollHomeHashNav } from "@/lib/hash-nav";
+import { ctaEditorialPrimary } from "@/lib/cta-classes";
+import {
+  FRAGMENT_NAV_EVENT,
+  maybeSmoothScrollHomeHashNav,
+  type FragmentNavEventDetail,
+} from "@/lib/hash-nav";
 import { natalieImages } from "@/lib/natalie-images";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -21,6 +26,14 @@ const MAIN_NAV_SECTIONS = [
 type MainNavSectionId = (typeof MAIN_NAV_SECTIONS)[number]["id"];
 
 const scrollThresholdPx = 16;
+
+/**
+ * Próg „sekcja jest aktywna” dla scroll-spy — musi być ≥ `scroll-mt-28` (~7rem),
+ * inaczej po `scrollIntoView` góra sekcji zostaje poniżej progu i podkreślenie zostaje o jedną pozycję wstecz.
+ */
+function navSectionSpyMarkerPx(): number {
+  return window.matchMedia("(min-width: 768px)").matches ? 132 : 120;
+}
 
 /** Musi być ≥ czasowi `transition-[grid-template-rows]` panelu menu + margines. */
 const menuExpandDurationMs = 520;
@@ -51,11 +64,9 @@ export function MainHeader() {
       return;
     }
     const ids = MAIN_NAV_SECTIONS.map((s) => s.id);
-    const markerPx = () =>
-      window.matchMedia("(min-width: 768px)").matches ? 100 : 80;
 
     const updateActiveSection = () => {
-      const marker = markerPx();
+      const marker = navSectionSpyMarkerPx();
       let current: MainNavSectionId = "hero";
       for (const id of ids) {
         const el = document.getElementById(id);
@@ -91,6 +102,22 @@ export function MainHeader() {
     });
     return () => window.cancelAnimationFrame(id);
   }, [isHome, pathname]);
+
+  useEffect(() => {
+    if (!isHome) {
+      return;
+    }
+    const onFragmentNav = (e: Event) => {
+      const { id } = (e as CustomEvent<FragmentNavEventDetail>).detail;
+      if (MAIN_NAV_SECTIONS.some((s) => s.id === id)) {
+        setActiveSectionId(id as MainNavSectionId);
+      }
+    };
+    window.addEventListener(FRAGMENT_NAV_EVENT, onFragmentNav);
+    return () => {
+      window.removeEventListener(FRAGMENT_NAV_EVENT, onFragmentNav);
+    };
+  }, [isHome]);
 
   useEffect(() => {
     const id = window.requestAnimationFrame(() => {
@@ -150,12 +177,12 @@ export function MainHeader() {
 
   return (
     <header
-      className={`sticky top-0 z-[100] border-b ease-[cubic-bezier(0.22,1,0.36,1)] ${
+      className={`sticky top-0 z-[100] border-b border-white/[0.08] ease-[cubic-bezier(0.22,1,0.36,1)] ${
         menuOpen
-          ? "max-md:transition-none border-black/10 bg-atelier-light shadow-[0_1px_0_rgba(0,0,0,0.06),0_12px_40px_-18px_rgba(0,0,0,0.12)] md:border-black/5 md:bg-atelier-light/78 md:shadow-none md:backdrop-blur-md md:supports-backdrop-filter:bg-atelier-light/72 md:transition-[background-color,backdrop-filter,border-color,box-shadow] md:duration-500"
+          ? "max-md:transition-none bg-atelier-surface-secondary/95 md:bg-atelier-surface/86 md:backdrop-blur-md md:supports-backdrop-filter:bg-atelier-surface/82 md:transition-[background-color,backdrop-filter] md:duration-700"
           : scrolled
-            ? "border-black/10 bg-atelier-light/92 shadow-[0_1px_0_rgba(0,0,0,0.04),0_8px_32px_-12px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-[background-color,backdrop-filter,border-color,box-shadow] duration-500 supports-backdrop-filter:bg-atelier-light/88"
-            : "border-black/5 bg-atelier-light/78 backdrop-blur-md transition-[background-color,backdrop-filter,border-color,box-shadow] duration-500 supports-backdrop-filter:bg-atelier-light/72"
+            ? "bg-atelier-surface/90 backdrop-blur-xl transition-[background-color,backdrop-filter] duration-700 supports-backdrop-filter:bg-atelier-surface/86"
+            : "bg-atelier-surface/78 backdrop-blur-md transition-[background-color,backdrop-filter] duration-700 supports-backdrop-filter:bg-atelier-surface/74"
       }`}
       data-purpose="site-navigation"
     >
@@ -192,10 +219,10 @@ export function MainHeader() {
           {MAIN_NAV_SECTIONS.map((item) => (
             <a
               key={item.id}
-              className={`nav-link transition-colors ${
+              className={`nav-link transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 isHome && activeSectionId === item.id
                   ? "nav-link--active"
-                  : "text-black/70 hover:text-black"
+                  : "hover:text-atelier-text"
               }`}
               href={isHome ? `#${item.id}` : `/#${item.id}`}
               aria-current={
@@ -210,7 +237,7 @@ export function MainHeader() {
         <div className="flex shrink-0 items-center md:gap-0">
           <button
             type="button"
-            className="flex h-11 w-11 items-center justify-center text-atelier-dark transition-opacity hover:opacity-70 md:hidden"
+            className="flex h-11 w-11 items-center justify-center text-atelier-text transition-opacity duration-500 hover:opacity-70 md:hidden"
             onClick={() => setMenuOpen((o) => !o)}
             aria-expanded={menuOpen}
             aria-controls="mobile-site-nav"
@@ -223,7 +250,7 @@ export function MainHeader() {
             )}
           </button>
           <a
-            className="hidden bg-atelier-dark px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-black md:inline-flex md:items-center"
+            className={`hidden px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest md:inline-flex md:items-center ${ctaEditorialPrimary}`}
             href={isHome ? "#rezerwacja" : "/#rezerwacja"}
             onClick={(e) => maybeSmoothScrollHomeHashNav(e, isHome)}
           >
@@ -233,9 +260,9 @@ export function MainHeader() {
 
         <div
           id="mobile-site-nav"
-          className={`absolute inset-x-0 top-full z-20 grid overflow-hidden bg-atelier-light shadow-[0_12px_40px_-16px_rgba(0,0,0,0.2)] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:hidden md:bg-atelier-light/98 md:backdrop-blur-xl ${
+          className={`absolute inset-x-0 top-full z-20 grid overflow-hidden bg-atelier-surface-secondary transition-[grid-template-rows] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:hidden md:backdrop-blur-xl ${
             menuOpen
-              ? "pointer-events-auto grid-rows-[1fr] border-b border-black/10"
+              ? "pointer-events-auto grid-rows-[1fr] border-b border-white/[0.08]"
               : "pointer-events-none grid-rows-[0fr] border-b-0"
           }`}
           aria-hidden={!menuOpen}
@@ -248,10 +275,10 @@ export function MainHeader() {
               {MAIN_NAV_SECTIONS.map((item) => (
                 <a
                   key={item.id}
-                  className={`nav-link border-t border-black/6 py-3.5 first:border-t-0 transition-colors ${
+                  className={`nav-link border-t border-white/[0.06] py-3.5 first:border-t-0 transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                     isHome && activeSectionId === item.id
-                      ? "nav-link--active bg-black/[0.03]"
-                      : "text-black/80 hover:bg-black/[0.02]"
+                      ? "nav-link--active bg-white/[0.04]"
+                      : "hover:bg-white/[0.03]"
                   }`}
                   href={isHome ? `#${item.id}` : `/#${item.id}`}
                   aria-current={
@@ -268,7 +295,7 @@ export function MainHeader() {
                 </a>
               ))}
               <a
-                className="mt-1 border-t border-black/12 bg-atelier-dark py-3.5 text-center text-[9px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-black"
+                className="mt-1 border-t border-white/[0.08] bg-atelier-surface-elevated py-3.5 text-center text-[9px] font-bold uppercase tracking-[0.14em] text-atelier-text transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-atelier-accent/50 hover:bg-atelier-surface-secondary"
                 href={isHome ? "#rezerwacja" : "/#rezerwacja"}
                 onClick={(e) => {
                   maybeSmoothScrollHomeHashNav(e, isHome);

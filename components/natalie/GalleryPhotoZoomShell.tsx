@@ -25,3 +25,6 @@ export function GalleryPhotoZoomShell({
 /** Tylko `filter` na img — `transform` animuje się na rodzicu (GalleryPhotoZoomShell). */
 export const galleryPhotoImgClass =
   "object-cover transition-[filter] duration-700 ease-out";
+
+/** Archiwum na stronie głównej — `filter` i timing w `globals.css` (`.gallery-cinematic-target`). */
+export const galleryCinematicArchiveImgClass = "object-cover";

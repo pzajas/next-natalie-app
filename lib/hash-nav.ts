@@ -1,5 +1,10 @@
 import type { MouseEvent } from "react";
 
+/** `replaceState` nie powoduje re-renderu Reacta — nagłówek nasłuchuje tego zdarzenia dla podkreślenia nawigacji. */
+export const FRAGMENT_NAV_EVENT = "natalie:fragment-nav";
+
+export type FragmentNavEventDetail = { id: string };
+
 function triggerHeroNavFlash(el: HTMLElement) {
   el.classList.remove("hero-nav-flash");
   void el.offsetWidth;
@@ -23,6 +28,11 @@ export function maybeSmoothScrollHomeHashNav(e: MouseEvent<HTMLAnchorElement>, i
   el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   const path = `${window.location.pathname}${window.location.search}`;
   window.history.replaceState(null, "", `${path}#${id}`);
+  window.dispatchEvent(
+    new CustomEvent<FragmentNavEventDetail>(FRAGMENT_NAV_EVENT, {
+      detail: { id },
+    }),
+  );
   if (id === "hero") {
     if (reduce) {
       triggerHeroNavFlash(el);

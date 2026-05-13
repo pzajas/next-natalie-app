@@ -42,7 +42,7 @@ export default function RootLayout({
       lang="pl"
       className={`${inter.variable} ${bodoniModa.variable} ${playfair.variable} h-full`}
     >
-      <body className="min-h-full bg-[#f5f3f0] text-atelier-dark font-sans antialiased">
+      <body className="min-h-full bg-atelier-surface text-atelier-text font-sans antialiased">
         <RouteScrollToTop />
         <div className="mx-auto w-full min-w-0 max-w-[1200px]">{children}</div>
         <ScrollToTopButton />

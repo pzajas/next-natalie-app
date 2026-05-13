@@ -8,22 +8,22 @@ export function PhilosophySection() {
   return (
     <section
       id="o-salonie"
-      className="scroll-mt-28 bg-[#f7f4f1] py-[40px]"
+      className="scroll-mt-28 bg-atelier-surface py-[40px]"
       data-purpose="brand-philosophy"
     >
       <ContentContainer className="!px-0 py-0">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-stretch md:gap-16">
           <div className="min-w-0 pl-[24px]">
-            <div className="group grain-overlay relative aspect-[4/3] w-full overflow-hidden shadow-subtle md:aspect-square">
+            <div className="group grain-overlay relative aspect-[4/3] w-full overflow-hidden md:aspect-square">
               <Image
                 alt="Narzędzia rzemieślnicze NATALIE"
-                className="h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
+                className="h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 src={natalieImages.philosophyTools}
               />
               <span
-                className="pointer-events-none absolute inset-0 bg-black/10"
+                className="pointer-events-none absolute inset-0 bg-atelier-surface/25"
                 aria-hidden
               />
             </div>

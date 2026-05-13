@@ -12,6 +12,7 @@ export { PricingPageView } from "./PricingPageView";
 export { RevealOnScroll } from "./RevealOnScroll";
 export { ReservationCta } from "./ReservationCta";
 export { ServicesSection } from "./ServicesSection";
+export { SalonEditorialInterlude } from "./SalonEditorialInterlude";
 export { ScrollToTopButton } from "./ScrollToTopButton";
 export { RouteScrollToTop } from "./RouteScrollToTop";
 export { TestimonialsSection } from "./TestimonialsSection";

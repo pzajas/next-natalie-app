@@ -3,7 +3,7 @@
  */
 
 export const innerPageHeroSectionClass =
-  "border-b border-black/5 py-[40px]";
+  "border-b border-white/[0.06] bg-atelier-surface py-[40px]";
 
 export const innerPageHeroRowClass =
   "flex flex-col gap-8 md:flex-row md:items-end md:justify-between";
@@ -15,12 +15,12 @@ export const innerPageTitleClass = "section-title max-w-xl";
 export const innerPageToolsSlotClass = "relative w-full max-w-md shrink-0";
 
 export const innerPageChipSectionClass =
-  "border-b border-black/5 py-[40px]";
+  "border-b border-white/[0.06] bg-atelier-surface-secondary py-[40px]";
 
-export const innerPageContentSectionClass = "py-[40px]";
+export const innerPageContentSectionClass = "bg-atelier-surface py-[40px]";
 
 export const innerPageEmptyStateClass =
-  "text-center text-sm leading-relaxed text-stone-500";
+  "text-center text-sm leading-relaxed text-atelier-text-muted";
 
 /** Szerokość głównej kolumny treści (lista usług / siatka galerii). */
 export const innerPageContentInnerClass = "mx-auto w-full max-w-4xl";

@@ -78,10 +78,10 @@ export function PhilosophyTeamSpotlight() {
       }`}
     >
       <div className="min-h-[5.75rem] md:min-h-[6.25rem]">
-        <p className="label-caps text-stone-700">{profile.roleLabel}</p>
+        <p className="label-caps text-atelier-text-muted">{profile.roleLabel}</p>
         <h2 className="section-title mt-2 md:mt-3">{profile.name}</h2>
       </div>
-      <div className="min-h-[15.5rem] max-w-lg space-y-4 text-[0.9375rem] font-medium leading-relaxed text-stone-700 md:min-h-[17.5rem] md:space-y-5 md:text-base">
+      <div className="min-h-[15.5rem] max-w-lg space-y-4 text-[0.9375rem] font-medium leading-relaxed text-atelier-text-secondary md:min-h-[17.5rem] md:space-y-5 md:text-base">
         {profile.paragraphs.map((text, i) => (
           <p key={`${profile.id}-${i}`}>{text}</p>
         ))}

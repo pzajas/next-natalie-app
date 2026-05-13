@@ -4,14 +4,42 @@
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-bodoni-moda), ui-serif, Georgia, serif;
-  --color-atelier-light: #f7f7f7;
-  --color-atelier-dark: #111111;
+
+  /** Ciemna baza — warstwy węgla (bez czystej #000). */
+  --color-atelier-surface: #2d2d2d;
+  --color-atelier-surface-secondary: #353535;
+  --color-atelier-surface-elevated: #3b3b3b;
+
+  /** Tekst editorial (jasny na ciemnym). */
+  --color-atelier-text: #f3efea;
+  --color-atelier-text-secondary: #d7d1cb;
+  --color-atelier-text-muted: #aaa39d;
+  --color-atelier-text-label: #8a847e;
+
+  /** Akcent — oszczędnie (nawigacja, detale, hover). Trochę jaśniejszy złoty. */
+  --color-atelier-accent: #c9ab88;
+  --color-atelier-accent-hover: #d8bf9f;
+
+  /**
+   * Spójność ze starymi nazwami klas:
+   * - `atelier-dark` = główny kolor tekstu na ciemnym tle
+   * - `atelier-light` = druga płaszczyzna sekcji (nie „biały” layout)
+   */
+  --color-atelier-dark: #f3efea;
+  --color-atelier-light: #353535;
+
+  /** `bg-black` / `text-black` — tekst i obramowania wynikają z kontekstu klas w komponentach. */
+  --color-black: #121212;
+
+  /** Nieużywane na głównej ścieżce — alias sekcji miękkiej. */
+  --color-atelier-warm-surface: #353535;
 }
 
 @layer base {
   body {
-    color: #171717;
-    line-height: 1.6;
+    background-color: var(--color-atelier-surface);
+    color: var(--color-atelier-text);
+    line-height: 1.65;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
@@ -69,10 +97,10 @@ h3,
   .section-title {
     font-family: var(--font-serif), ui-serif, Georgia, serif;
     font-size: 3rem;
-    line-height: 1.1;
+    line-height: 1.08;
     letter-spacing: -0.02em;
     font-weight: 400;
-    color: #000;
+    color: var(--color-atelier-text);
   }
 
   @media (min-width: 768px) {
@@ -81,30 +109,48 @@ h3,
     }
   }
 
+  /** Złoty detal pod wyśrodkowanymi nagłówkami sekcji (zawsze widoczny). */
+  .section-title.text-center::after {
+    content: "";
+    display: block;
+    width: 2.75rem;
+    height: 2px;
+    margin-top: 0.65rem;
+    margin-inline: auto;
+    background-color: var(--color-atelier-accent);
+  }
+
+  @media (min-width: 768px) {
+    .section-title.text-center::after {
+      margin-top: 0.85rem;
+    }
+  }
+
   .nav-link {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-weight: 500;
+    color: var(--color-atelier-text-secondary);
   }
 
   /** Aktywna sekcja (scroll-spy) — menu górne */
   .nav-link--active {
     font-weight: 700;
     letter-spacing: 0.11em;
-    color: rgb(0 0 0);
+    color: var(--color-atelier-text);
   }
 
   @media (min-width: 768px) {
     .nav-link--active {
-      box-shadow: inset 0 -1px 0 0 rgb(0 0 0 / 0.55);
+      border-bottom: 1px solid var(--color-atelier-accent);
       padding-bottom: 0.125rem;
     }
   }
 
   @media (max-width: 767px) {
     .nav-link--active {
-      border-left: 2px solid rgb(0 0 0);
+      border-left: 2px solid var(--color-atelier-accent);
       padding-left: 0.65rem;
       margin-left: -0.125rem;
     }
@@ -112,21 +158,19 @@ h3,
 
   @keyframes hero-nav-flash {
     0% {
-      box-shadow: inset 0 0 0 0 rgb(0 0 0 / 0);
+      outline-color: transparent;
     }
-    35% {
-      box-shadow:
-        inset 0 0 0 1px rgb(0 0 0 / 0.12),
-        0 0 0 10px rgb(0 0 0 / 0.04);
+    40% {
+      outline-color: rgb(201 171 136 / 0.45);
     }
     100% {
-      box-shadow:
-        inset 0 0 0 0 rgb(0 0 0 / 0),
-        0 0 0 0 rgb(0 0 0 / 0);
+      outline-color: transparent;
     }
   }
 
   .hero-nav-flash {
+    outline: 2px solid transparent;
+    outline-offset: 0.35rem;
     animation: hero-nav-flash 0.85s ease-out 1;
   }
 
@@ -141,6 +185,7 @@ h3,
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-weight: 600;
+    color: var(--color-atelier-text-label);
   }
 
   .content-container {
@@ -149,24 +194,20 @@ h3,
     padding-inline: 0;
   }
 
-  .shadow-subtle {
-    box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.2);
-  }
-
   .grain-overlay::before {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.045;
-    background-image: radial-gradient(#000 0.55px, transparent 0.55px);
+    opacity: 0.04;
+    background-image: radial-gradient(rgb(255 255 255 / 0.35) 0.55px, transparent 0.55px);
     background-size: 3px 3px;
   }
 
   .reveal-fade-up {
     opacity: 0;
     transform: translateY(14px);
-    animation: fade-up 800ms ease-out forwards;
+    animation: fade-up 0.76s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -193,7 +234,7 @@ h3,
    * Klasa .reveal-on-scroll--visible dodawana przez RevealOnScroll (IntersectionObserver).
    */
   .reveal-on-scroll {
-    --reveal-dur: 0.78s;
+    --reveal-dur: 0.85s;
     --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
     will-change: opacity, transform;
     transition:
@@ -227,8 +268,15 @@ h3,
   }
 
   .logo-no-bg {
-    mix-blend-mode: multiply;
-    filter: contrast(1.15);
+    mix-blend-mode: normal;
+    opacity: 0.94;
+    filter: brightness(0) invert(1);
+  }
+
+  .gallery-color-reveal-target :where(img) {
+    transition:
+      filter 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /**
@@ -280,6 +328,28 @@ h3,
         filter: grayscale(0);
         transition: none;
       }
+    }
+  }
+
+  /**
+   * Galeria archiwum (strona główna): jedno zdjęcie w delikatnym kolorze, reszta szarość — bez hover.
+   */
+  .gallery-cinematic-target :where(img) {
+    transition: filter 2000ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .gallery-cinematic-target[data-cinematic-active="false"] :where(img) {
+    filter: grayscale(100%) brightness(0.92);
+  }
+
+  .gallery-cinematic-target[data-cinematic-active="true"] :where(img) {
+    filter: grayscale(0%) saturate(80%) brightness(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-cinematic-target :where(img) {
+      filter: grayscale(100%) brightness(0.92) !important;
+      transition: none;
     }
   }
 

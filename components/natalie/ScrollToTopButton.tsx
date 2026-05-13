@@ -29,7 +29,7 @@ export function ScrollToTopButton() {
       type="button"
       onClick={goTop}
       aria-label="Wróć na górę strony"
-      className={`fixed z-90 flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-full border border-black bg-white text-black shadow-sm transition-opacity duration-200 ease-out motion-reduce:transition-none md:h-12 md:w-12 ${
+      className={`fixed z-90 flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-full border border-white/[0.12] bg-atelier-surface-elevated text-atelier-text transition-[opacity,colors,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-atelier-accent/50 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-atelier-accent/45 md:h-12 md:w-12 ${
         visible ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
       }`}
       style={{

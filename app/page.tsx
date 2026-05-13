@@ -6,6 +6,7 @@ import {
     PhilosophySection,
     ReservationCta,
     RevealOnScroll,
+    SalonEditorialInterlude,
     ServicesSection,
     TestimonialsSection,
 } from "@/components/natalie";
@@ -27,6 +28,9 @@ export default function Home() {
         </RevealOnScroll>
         <RevealOnScroll>
           <TestimonialsSection />
+        </RevealOnScroll>
+        <RevealOnScroll>
+          <SalonEditorialInterlude />
         </RevealOnScroll>
         <RevealOnScroll>
           <ReservationCta />
