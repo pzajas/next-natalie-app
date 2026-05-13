@@ -1,9 +1,12 @@
-import Image from "next/image";
 import { localGalleryImages } from "@/lib/local-gallery-assets";
+import Image from "next/image";
 import { ContentContainer } from "./ContentContainer";
 import { GalleryColorRevealTarget } from "./GalleryColorRevealTarget";
+import {
+    GalleryPhotoZoomShell,
+    galleryPhotoImgClass,
+} from "./GalleryPhotoZoomShell";
 import { SectionTextLink } from "./SectionTextLink";
-import { GalleryPhotoZoomShell, galleryPhotoImgClass } from "./GalleryPhotoZoomShell";
 
 /** Mobile: niższe kafla; desktop: jak dotąd. */
 const tileClass =
@@ -13,19 +16,21 @@ export function ArchiveGallery() {
   return (
     <section
       id="galeria"
-      className="scroll-mt-28 bg-atelier-light py-10 md:py-[52px]"
+      className="scroll-mt-28 bg-[#f7f4f1] py-[40px]"
       data-purpose="gallery"
     >
-      <ContentContainer>
-        <div className="mb-10 text-center md:mb-16">
+      <ContentContainer className="!px-0 py-0">
+        <div className="mb-10 px-6 text-center md:mb-16">
           <h2 className="section-title text-center">Efekty naszej pracy</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm font-medium leading-relaxed text-stone-700 md:mt-4 md:text-base">
-            Więcej finalnych efektów, więcej ruchu i naturalnego światła. Galeria pokazuje fryzury
-            w realnym życiu, nie tylko studyjne kadry.
+            Więcej finalnych efektów, więcej ruchu i naturalnego światła.
+            Galeria pokazuje fryzury w realnym życiu, nie tylko studyjne kadry.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-12 md:gap-4">
-          <GalleryColorRevealTarget className={`group ${tileClass} md:col-span-6`}>
+        <div className="grid grid-cols-1 gap-3 px-[24px] md:grid-cols-12 md:gap-4">
+          <GalleryColorRevealTarget
+            className={`group ${tileClass} md:col-span-6`}
+          >
             <GalleryPhotoZoomShell>
               <Image
                 alt="Efekt fryzury — fale i połysk"
@@ -37,7 +42,9 @@ export function ArchiveGallery() {
               />
             </GalleryPhotoZoomShell>
           </GalleryColorRevealTarget>
-          <GalleryColorRevealTarget className={`group ${tileClass} md:col-span-6`}>
+          <GalleryColorRevealTarget
+            className={`group ${tileClass} md:col-span-6`}
+          >
             <GalleryPhotoZoomShell>
               <Image
                 alt="Wnętrze salonu — szeroki kadr"
@@ -52,11 +59,13 @@ export function ArchiveGallery() {
             className={`flex items-center justify-center border border-black/12 bg-white p-5 shadow-subtle md:col-span-4 md:p-8 ${tileClass}`}
           >
             <p className="font-playfair text-center text-lg italic leading-snug text-black md:text-2xl md:leading-relaxed">
-              &quot;Dopieszczenie bez przepychu — schludnie, bez nadmiernej stylizacji. Włosy mają dobrze
-              wyglądać od rana do wieczora.&quot;
+              &quot;Dopieszczenie bez przepychu — schludnie, bez nadmiernej
+              stylizacji. Włosy mają dobrze wyglądać od rana do wieczora.&quot;
             </p>
           </div>
-          <GalleryColorRevealTarget className={`group ${tileClass} md:col-span-4`}>
+          <GalleryColorRevealTarget
+            className={`group ${tileClass} md:col-span-4`}
+          >
             <GalleryPhotoZoomShell>
               <Image
                 alt="Detal pracy stylisty przy włosach"
@@ -67,7 +76,9 @@ export function ArchiveGallery() {
               />
             </GalleryPhotoZoomShell>
           </GalleryColorRevealTarget>
-          <GalleryColorRevealTarget className={`group ${tileClass} md:col-span-4`}>
+          <GalleryColorRevealTarget
+            className={`group ${tileClass} md:col-span-4`}
+          >
             <GalleryPhotoZoomShell>
               <Image
                 alt="Efekt: nowoczesny bob"
@@ -78,7 +89,9 @@ export function ArchiveGallery() {
               />
             </GalleryPhotoZoomShell>
           </GalleryColorRevealTarget>
-          <GalleryColorRevealTarget className={`group ${tileClass} md:col-span-4`}>
+          <GalleryColorRevealTarget
+            className={`group ${tileClass} md:col-span-4`}
+          >
             <GalleryPhotoZoomShell>
               <Image
                 alt="Stylistka podczas strzyżenia"
@@ -89,7 +102,9 @@ export function ArchiveGallery() {
               />
             </GalleryPhotoZoomShell>
           </GalleryColorRevealTarget>
-          <GalleryColorRevealTarget className={`group ${tileClass} md:col-span-8`}>
+          <GalleryColorRevealTarget
+            className={`group ${tileClass} md:col-span-8`}
+          >
             <GalleryPhotoZoomShell>
               <Image
                 alt="Klientka w przestrzeni salonu"
@@ -101,7 +116,7 @@ export function ArchiveGallery() {
             </GalleryPhotoZoomShell>
           </GalleryColorRevealTarget>
         </div>
-        <div className="mx-auto mt-8 max-w-4xl text-center md:mt-10">
+        <div className="mx-auto mt-8 max-w-4xl px-6 text-center md:mt-10">
           <SectionTextLink href="/galeria">
             <span>Zobacz pełną galerię</span>
             <span aria-hidden>→</span>

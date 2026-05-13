@@ -1,21 +1,24 @@
 "use client";
 
+import { maybeSmoothScrollHomeHashNav } from "@/lib/hash-nav";
+import { natalieImages } from "@/lib/natalie-images";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
-import { maybeSmoothScrollHomeHashNav } from "@/lib/hash-nav";
-import { natalieImages } from "@/lib/natalie-images";
 import { ContentContainer } from "./ContentContainer";
 
-const hashNav = [
+const MAIN_NAV_SECTIONS = [
+  { id: "hero", label: "Natalie" },
   { id: "o-salonie", label: "O salonie" },
   { id: "uslugi", label: "Usługi" },
   { id: "galeria", label: "Galeria" },
   { id: "opinie", label: "Opinie" },
   { id: "kontakt", label: "Kontakt" },
 ] as const;
+
+type MainNavSectionId = (typeof MAIN_NAV_SECTIONS)[number]["id"];
 
 const scrollThresholdPx = 16;
 
@@ -31,6 +34,8 @@ export function MainHeader() {
   const [dimmerMounted, setDimmerMounted] = useState(false);
   /** Drugi krok: uruchomienie fade-in opacity (1s). */
   const [dimmerFadeIn, setDimmerFadeIn] = useState(false);
+  const [activeSectionId, setActiveSectionId] =
+    useState<MainNavSectionId>("hero");
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,7 +47,56 @@ export function MainHeader() {
   }, [pathname]);
 
   useEffect(() => {
-    setMenuOpen(false);
+    if (!isHome) {
+      return;
+    }
+    const ids = MAIN_NAV_SECTIONS.map((s) => s.id);
+    const markerPx = () =>
+      window.matchMedia("(min-width: 768px)").matches ? 100 : 80;
+
+    const updateActiveSection = () => {
+      const marker = markerPx();
+      let current: MainNavSectionId = "hero";
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) {
+          continue;
+        }
+        if (el.getBoundingClientRect().top <= marker) {
+          current = id;
+        }
+      }
+      setActiveSectionId((prev) => (prev === current ? prev : current));
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+    return () => {
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
+  }, [isHome]);
+
+  useEffect(() => {
+    if (!isHome) {
+      return;
+    }
+    const hash = window.location.hash.slice(1);
+    if (!hash || !MAIN_NAV_SECTIONS.some((s) => s.id === hash)) {
+      return;
+    }
+    const id = window.requestAnimationFrame(() => {
+      setActiveSectionId(hash as MainNavSectionId);
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [isHome, pathname]);
+
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => {
+      setMenuOpen(false);
+    });
+    return () => window.cancelAnimationFrame(id);
   }, [pathname]);
 
   useEffect(() => {
@@ -61,9 +115,11 @@ export function MainHeader() {
 
   useEffect(() => {
     if (!menuOpen) {
-      setDimmerMounted(false);
-      setDimmerFadeIn(false);
-      return;
+      const id = window.requestAnimationFrame(() => {
+        setDimmerMounted(false);
+        setDimmerFadeIn(false);
+      });
+      return () => window.cancelAnimationFrame(id);
     }
     const showDimmer = window.setTimeout(() => {
       setDimmerMounted(true);
@@ -77,9 +133,9 @@ export function MainHeader() {
     if (!dimmerMounted) {
       return;
     }
-    setDimmerFadeIn(false);
     let innerId = 0;
     const outerId = window.requestAnimationFrame(() => {
+      setDimmerFadeIn(false);
       innerId = window.requestAnimationFrame(() => {
         setDimmerFadeIn(true);
       });
@@ -113,7 +169,7 @@ export function MainHeader() {
           onClick={() => setMenuOpen(false)}
         />
       ) : null}
-      <ContentContainer className="relative z-10 flex h-[72px] items-center justify-between gap-3 md:h-24">
+      <ContentContainer className="relative z-10 flex h-[72px] items-center justify-between gap-3 px-[24px]! md:h-24">
         <Link
           href="/"
           className="inline-block shrink-0 bg-transparent"
@@ -122,19 +178,29 @@ export function MainHeader() {
         >
           <Image
             alt="NATALIE Logo"
-            className="logo-no-bg h-[52px] w-auto object-contain md:h-24"
-            height={114}
+            className="logo-no-bg h-6 w-auto object-contain sm:h-7 md:h-9 lg:h-10"
+            height={44}
             src={natalieImages.logo}
-            width={381}
+            width={147}
             priority
           />
         </Link>
-        <nav className="hidden items-center space-x-8 md:flex lg:space-x-10" aria-label="Nawigacja główna">
-          {hashNav.map((item) => (
+        <nav
+          className="hidden items-center space-x-8 md:flex lg:space-x-10"
+          aria-label="Nawigacja główna"
+        >
+          {MAIN_NAV_SECTIONS.map((item) => (
             <a
               key={item.id}
-              className="nav-link transition-opacity hover:opacity-60"
+              className={`nav-link transition-colors ${
+                isHome && activeSectionId === item.id
+                  ? "nav-link--active"
+                  : "text-black/70 hover:text-black"
+              }`}
               href={isHome ? `#${item.id}` : `/#${item.id}`}
+              aria-current={
+                isHome && activeSectionId === item.id ? "location" : undefined
+              }
               onClick={(e) => maybeSmoothScrollHomeHashNav(e, isHome)}
             >
               {item.label}
@@ -150,13 +216,17 @@ export function MainHeader() {
             aria-controls="mobile-site-nav"
             aria-label={menuOpen ? "Zamknij menu" : "Otwórz menu"}
           >
-            {menuOpen ? <X className="h-5 w-5" strokeWidth={1.5} /> : <Menu className="h-5 w-5" strokeWidth={1.5} />}
+            {menuOpen ? (
+              <X className="h-5 w-5" strokeWidth={1.5} />
+            ) : (
+              <Menu className="h-5 w-5" strokeWidth={1.5} />
+            )}
           </button>
-            <a
-              className="hidden bg-atelier-dark px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-black md:inline-flex md:items-center"
-              href={isHome ? "#rezerwacja" : "/#rezerwacja"}
-              onClick={(e) => maybeSmoothScrollHomeHashNav(e, isHome)}
-            >
+          <a
+            className="hidden bg-atelier-dark px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-black md:inline-flex md:items-center"
+            href={isHome ? "#rezerwacja" : "/#rezerwacja"}
+            onClick={(e) => maybeSmoothScrollHomeHashNav(e, isHome)}
+          >
             REZERWUJ
           </a>
         </div>
@@ -171,31 +241,43 @@ export function MainHeader() {
           aria-hidden={!menuOpen}
         >
           <div className="min-h-0 overflow-hidden" inert={!menuOpen}>
-            <nav className="flex max-h-[min(72vh,520px)] flex-col overflow-y-auto overscroll-contain px-4 py-2 pb-4" aria-label="Menu mobilne">
-            {hashNav.map((item) => (
+            <nav
+              className="flex max-h-[min(72vh,520px)] flex-col overflow-y-auto overscroll-contain px-4 py-2 pb-4"
+              aria-label="Menu mobilne"
+            >
+              {MAIN_NAV_SECTIONS.map((item) => (
+                <a
+                  key={item.id}
+                  className={`nav-link border-t border-black/6 py-3.5 first:border-t-0 transition-colors ${
+                    isHome && activeSectionId === item.id
+                      ? "nav-link--active bg-black/[0.03]"
+                      : "text-black/80 hover:bg-black/[0.02]"
+                  }`}
+                  href={isHome ? `#${item.id}` : `/#${item.id}`}
+                  aria-current={
+                    isHome && activeSectionId === item.id
+                      ? "location"
+                      : undefined
+                  }
+                  onClick={(e) => {
+                    maybeSmoothScrollHomeHashNav(e, isHome);
+                    setMenuOpen(false);
+                  }}
+                >
+                  {item.label}
+                </a>
+              ))}
               <a
-                key={item.id}
-                className="nav-link border-t border-black/6 py-3.5 first:border-t-0 transition-opacity hover:opacity-60"
-                href={isHome ? `#${item.id}` : `/#${item.id}`}
+                className="mt-1 border-t border-black/12 bg-atelier-dark py-3.5 text-center text-[9px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-black"
+                href={isHome ? "#rezerwacja" : "/#rezerwacja"}
                 onClick={(e) => {
                   maybeSmoothScrollHomeHashNav(e, isHome);
                   setMenuOpen(false);
                 }}
               >
-                {item.label}
+                Rezerwuj wizytę
               </a>
-            ))}
-            <a
-              className="mt-1 border-t border-black/12 bg-atelier-dark py-3.5 text-center text-[9px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-black"
-              href={isHome ? "#rezerwacja" : "/#rezerwacja"}
-              onClick={(e) => {
-                maybeSmoothScrollHomeHashNav(e, isHome);
-                setMenuOpen(false);
-              }}
-            >
-              Rezerwuj wizytę
-            </a>
-          </nav>
+            </nav>
           </div>
         </div>
       </ContentContainer>

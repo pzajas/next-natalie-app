@@ -15,7 +15,9 @@ export function GalleryPhotoZoomShell({
 }) {
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <div className={`relative h-full w-full origin-center ${zoomClassName}`}>{children}</div>
+      <div className={`relative h-full w-full origin-center ${zoomClassName}`}>
+        {children}
+      </div>
     </div>
   );
 }

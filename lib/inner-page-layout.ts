@@ -2,7 +2,8 @@
  * Wspólny szkielet stron wewnętrznych (cennik, galeria) — ta sama typografia, odstępy i rytm sekcji.
  */
 
-export const innerPageHeroSectionClass = "border-b border-black/5 bg-white py-[60px]";
+export const innerPageHeroSectionClass =
+  "border-b border-black/5 py-[40px]";
 
 export const innerPageHeroRowClass =
   "flex flex-col gap-8 md:flex-row md:items-end md:justify-between";
@@ -13,11 +14,13 @@ export const innerPageTitleClass = "section-title max-w-xl";
 /** Prawa kolumna hero (np. wyszukiwarka na cenniku). */
 export const innerPageToolsSlotClass = "relative w-full max-w-md shrink-0";
 
-export const innerPageChipSectionClass = "border-b border-black/5 bg-white py-6";
+export const innerPageChipSectionClass =
+  "border-b border-black/5 py-[40px]";
 
-export const innerPageContentSectionClass = "bg-white py-[60px]";
+export const innerPageContentSectionClass = "py-[40px]";
 
-export const innerPageEmptyStateClass = "text-center text-sm leading-relaxed text-stone-500";
+export const innerPageEmptyStateClass =
+  "text-center text-sm leading-relaxed text-stone-500";
 
 /** Szerokość głównej kolumny treści (lista usług / siatka galerii). */
 export const innerPageContentInnerClass = "mx-auto w-full max-w-4xl";

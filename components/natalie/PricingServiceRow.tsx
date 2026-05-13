@@ -1,27 +1,36 @@
-import Link from "next/link";
 import type { PricingService } from "@/lib/pricing-data";
+import Link from "next/link";
 
 type PricingServiceRowProps = {
   service: PricingService;
 };
 
 export function PricingServiceRow({ service }: PricingServiceRowProps) {
-  const { name, description, price, duration, originalPrice, promoLabel } = service;
+  const { name, description, price, duration, originalPrice, promoLabel } =
+    service;
 
   return (
     <div className="group border border-black/8 bg-white px-4 py-5 transition-all duration-300 hover:border-black/20 hover:shadow-subtle md:px-7 md:py-7">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-10">
         <div className="min-w-0 flex-1">
-          <h3 className="mb-1.5 text-xl leading-tight md:mb-2 md:text-2xl">{name}</h3>
+          <h3 className="mb-1.5 text-xl leading-tight md:mb-2 md:text-2xl">
+            {name}
+          </h3>
           {description ? (
-            <p className="text-[13px] font-medium leading-relaxed text-stone-700 md:text-sm">{description}</p>
+            <p className="text-[13px] font-medium leading-relaxed text-stone-700 md:text-sm">
+              {description}
+            </p>
           ) : null}
           <p className="mt-2.5 flex flex-wrap items-baseline gap-x-2 text-[13px] font-medium text-stone-800 md:mt-3 md:text-sm">
             <span className="label-caps text-stone-600">Cena od</span>
             {originalPrice ? (
-              <span className="text-xs font-normal text-stone-500 line-through">{originalPrice}</span>
+              <span className="text-xs font-normal text-stone-500 line-through">
+                {originalPrice}
+              </span>
             ) : null}
-            <span className="serif-font text-lg tabular-nums text-black md:text-xl">{price}</span>
+            <span className="serif-font text-lg tabular-nums text-black md:text-xl">
+              {price}
+            </span>
             <span className="text-stone-400" aria-hidden>
               —
             </span>

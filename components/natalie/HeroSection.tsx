@@ -34,10 +34,14 @@ const trustCards = [
 export function HeroSection() {
   return (
     <>
-      <section className="pt-2 pb-10 md:py-[58px]" data-purpose="hero-banner">
-        <ContentContainer>
+      <section
+        id="hero"
+        className="scroll-mt-28 bg-[#f7f4f1] py-[40px] md:scroll-mt-28"
+        data-purpose="hero-banner"
+      >
+        <ContentContainer className="!px-0">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-16">
-            <div className="order-1 space-y-5 md:order-1 md:space-y-8">
+            <div className="order-1 space-y-5 px-6 md:order-1 md:space-y-8">
               <p className="label-caps text-stone-700 reveal-fade-up">
                 4.9 ★ | 200+ opinii • Najwyżej oceniany salon premium
               </p>
@@ -69,7 +73,7 @@ export function HeroSection() {
                 </a>
               </div>
             </div>
-            <div className="order-2 flex justify-center md:order-2 md:justify-end">
+            <div className="order-2 flex min-w-0 justify-center px-[24px] md:order-2 md:justify-end">
               <GalleryColorRevealTarget className="group grain-overlay reveal-fade-up relative aspect-[5/4] w-full max-w-md overflow-hidden bg-stone-200 shadow-subtle md:aspect-4/5 md:max-w-none">
                 <GalleryPhotoZoomShell zoomClassName="transition-transform duration-1000 ease-out motion-safe:group-hover:scale-[1.04]">
                   <Image
@@ -90,8 +94,8 @@ export function HeroSection() {
           </div>
         </ContentContainer>
       </section>
-      <section className="bg-white py-10 md:py-[52px]" data-purpose="trust-social-proof">
-        <ContentContainer>
+      <section className="bg-[#f3efea] py-10 md:py-[52px]" data-purpose="trust-social-proof">
+        <ContentContainer className="py-0">
           <h2 className="section-title mx-auto mb-6 max-w-3xl text-center md:mb-12">
             Zaufanie i jakość
           </h2>

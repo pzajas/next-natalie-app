@@ -1,7 +1,7 @@
 /** Image URLs from the NATALIE landing design */
 export const natalieImages = {
-  logo:
-    "https://lh3.googleusercontent.com/aida/ADBb0ugOHSny4gAWhrTMAonCP69h2YDxubA7bpFc8wee58JpyukyjBhf0jMHDGv9mua6OKciba0b61Ouq_PenLvkP-s0Kgc6uRP8MQImlN1mpu0x831PHtgKkmr3cSTHuLM83QykEGU4rHFqMO_W7bO2cTkg52ymuOgaZ9atfcO5iHj7uzbKnsyYvxXnsZ2P-9Ok3WtjHwCivHSLBCPxUgksNaQSJVnJ_CgQIFkq_GB8IiN2FZ7xNH1BeN7f",
+  /** Lokalny plik SVG: `public/images/Logo.svg` */
+  logo: "/images/Logo.svg",
   logoClean:
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAm3Z-KSY2A6ldT2rn-NAjnnRV7lP68WFn-63ZAWTBrnMX98xbZ75j9oGK64F8Y4_A_0uPxVcw7wYg3UEAXpsv4m5pcFiW5FLO4LuTG4dlM77aTyX1jllbPitVDZI1s7L2kGw7RBxSaLDOEtnjl542PIhZa0wp9IaQVsuWdCr-qWQPWUN0dRvxdpaw7dBkDoEBmP8eHo51x44RVWx9z9QAvjJV_1mC2XABhqQWfxr5FmVsHr7czbi0cHo_JxJv3MUVEnRSY0hrVVw",
   /** Lokalny plik: `public/images/Hero.png` */

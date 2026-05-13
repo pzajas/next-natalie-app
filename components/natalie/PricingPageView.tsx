@@ -1,33 +1,30 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
 import {
-  innerPageChipSectionClass,
-  innerPageChipStripClass,
-  innerPageContentInnerClass,
-  innerPageContentSectionClass,
-  innerPageEmptyStateClass,
-  innerPageHeroRowClass,
-  innerPageHeroSectionClass,
-  innerPageTitleClass,
-  innerPageToolsSlotClass,
+    innerPageChipSectionClass,
+    innerPageChipStripClass,
+    innerPageContentInnerClass,
+    innerPageContentSectionClass,
+    innerPageEmptyStateClass,
+    innerPageHeroRowClass,
+    innerPageHeroSectionClass,
+    innerPageTitleClass,
+    innerPageToolsSlotClass,
 } from "@/lib/inner-page-layout";
 import {
-  type PricingCategory,
-  type PricingCategoryId,
-  pricingCategories,
+    type PricingCategory,
+    type PricingCategoryId,
+    pricingCategories,
 } from "@/lib/pricing-data";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { ContentContainer } from "./ContentContainer";
 import { PricingServiceRow } from "./PricingServiceRow";
 
 const ALL = "wszystkie" as const;
 
 function normalize(s: string) {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "");
+  return s.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
 }
 
 function uslugLabel(n: number) {
@@ -44,7 +41,9 @@ function uslugLabel(n: number) {
 
 export function PricingPageView() {
   const [query, setQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<typeof ALL | PricingCategoryId>(ALL);
+  const [categoryFilter, setCategoryFilter] = useState<
+    typeof ALL | PricingCategoryId
+  >(ALL);
   const [openMap, setOpenMap] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(pricingCategories.map((c) => [c.id, true])),
   );
@@ -58,69 +57,81 @@ export function PricingPageView() {
   });
   const blockChipClickUntil = useRef(0);
 
-  const onChipStripPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType === "mouse" && e.button !== 0) {
-      return;
-    }
-    const el = chipStripRef.current;
-    if (!el) {
-      return;
-    }
-    if (el.scrollWidth <= el.clientWidth + 2) {
-      return;
-    }
-    stripDrag.current = {
-      pointerId: e.pointerId,
-      startX: e.clientX,
-      startScrollLeft: el.scrollLeft,
-      dragging: false,
-    };
-    el.setPointerCapture(e.pointerId);
-  }, []);
+  const onChipStripPointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerType === "mouse" && e.button !== 0) {
+        return;
+      }
+      const el = chipStripRef.current;
+      if (!el) {
+        return;
+      }
+      if (el.scrollWidth <= el.clientWidth + 2) {
+        return;
+      }
+      stripDrag.current = {
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startScrollLeft: el.scrollLeft,
+        dragging: false,
+      };
+      el.setPointerCapture(e.pointerId);
+    },
+    [],
+  );
 
-  const onChipStripPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerId !== stripDrag.current.pointerId) {
-      return;
-    }
-    const el = chipStripRef.current;
-    if (!el) {
-      return;
-    }
-    const dx = e.clientX - stripDrag.current.startX;
-    if (Math.abs(dx) > 6) {
-      stripDrag.current.dragging = true;
-    }
-    el.scrollLeft = stripDrag.current.startScrollLeft - dx;
-  }, []);
+  const onChipStripPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerId !== stripDrag.current.pointerId) {
+        return;
+      }
+      const el = chipStripRef.current;
+      if (!el) {
+        return;
+      }
+      const dx = e.clientX - stripDrag.current.startX;
+      if (Math.abs(dx) > 6) {
+        stripDrag.current.dragging = true;
+      }
+      el.scrollLeft = stripDrag.current.startScrollLeft - dx;
+    },
+    [],
+  );
 
-  const onChipStripPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerId !== stripDrag.current.pointerId) {
-      return;
-    }
-    const el = chipStripRef.current;
-    try {
-      el?.releasePointerCapture(e.pointerId);
-    } catch {
-      /* already released */
-    }
-    if (stripDrag.current.dragging) {
-      blockChipClickUntil.current = Date.now() + 320;
-    }
-    stripDrag.current.pointerId = -1;
-    stripDrag.current.dragging = false;
-  }, []);
+  const onChipStripPointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (e.pointerId !== stripDrag.current.pointerId) {
+        return;
+      }
+      const el = chipStripRef.current;
+      try {
+        el?.releasePointerCapture(e.pointerId);
+      } catch {
+        /* already released */
+      }
+      if (stripDrag.current.dragging) {
+        blockChipClickUntil.current = Date.now() + 320;
+      }
+      stripDrag.current.pointerId = -1;
+      stripDrag.current.dragging = false;
+    },
+    [],
+  );
 
   const onChipStripLostPointerCapture = useCallback(() => {
     stripDrag.current.pointerId = -1;
     stripDrag.current.dragging = false;
   }, []);
 
-  const onChipStripClickCapture = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (Date.now() < blockChipClickUntil.current) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  }, []);
+  const onChipStripClickCapture = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (Date.now() < blockChipClickUntil.current) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    [],
+  );
 
   const toggleCategory = useCallback((id: string) => {
     setOpenMap((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -174,7 +185,10 @@ export function PricingPageView() {
         </ContentContainer>
       </section>
 
-      <section className={innerPageChipSectionClass} aria-label="Filtry kategorii">
+      <section
+        className={innerPageChipSectionClass}
+        aria-label="Filtry kategorii"
+      >
         <ContentContainer>
           <div
             ref={chipStripRef}
@@ -219,10 +233,15 @@ export function PricingPageView() {
         </ContentContainer>
       </section>
 
-      <section className={innerPageContentSectionClass} aria-label="Lista usług i ceny">
+      <section
+        className={innerPageContentSectionClass}
+        aria-label="Lista usług i ceny"
+      >
         <ContentContainer>
           {filteredCategories.length === 0 ? (
-            <p className={innerPageEmptyStateClass}>Brak usług spełniających kryteria.</p>
+            <p className={innerPageEmptyStateClass}>
+              Brak usług spełniających kryteria.
+            </p>
           ) : (
             <div className={`${innerPageContentInnerClass} space-y-16`}>
               {filteredCategories.map((cat) => {
@@ -238,14 +257,23 @@ export function PricingPageView() {
                       >
                         <span className="flex min-w-0 items-center gap-3">
                           {open ? (
-                            <ChevronUp className="h-5 w-5 shrink-0 text-stone-500" strokeWidth={1.5} />
+                            <ChevronUp
+                              className="h-5 w-5 shrink-0 text-stone-500"
+                              strokeWidth={1.5}
+                            />
                           ) : (
-                            <ChevronDown className="h-5 w-5 shrink-0 text-stone-500" strokeWidth={1.5} />
+                            <ChevronDown
+                              className="h-5 w-5 shrink-0 text-stone-500"
+                              strokeWidth={1.5}
+                            />
                           )}
-                          <span className="text-2xl text-black">{cat.name}</span>
+                          <span className="text-2xl text-black">
+                            {cat.name}
+                          </span>
                         </span>
                         <span className="shrink-0 text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
-                          {cat.services.length} {uslugLabel(cat.services.length)}
+                          {cat.services.length}{" "}
+                          {uslugLabel(cat.services.length)}
                         </span>
                       </button>
                     </h2>

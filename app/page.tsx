@@ -1,13 +1,13 @@
 import {
-  ArchiveGallery,
-  HeroSection,
-  MainFooter,
-  MainHeader,
-  PhilosophySection,
-  RevealOnScroll,
-  ReservationCta,
-  ServicesSection,
-  TestimonialsSection,
+    ArchiveGallery,
+    HeroSection,
+    MainFooter,
+    MainHeader,
+    PhilosophySection,
+    ReservationCta,
+    RevealOnScroll,
+    ServicesSection,
+    TestimonialsSection,
 } from "@/components/natalie";
 
 export default function Home() {

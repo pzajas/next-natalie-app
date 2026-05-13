@@ -1,7 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { maybeSmoothScrollHomeHashNav } from "@/lib/hash-nav";
+import { usePathname } from "next/navigation";
 import { ContentContainer } from "./ContentContainer";
 
 export function ReservationCta() {
@@ -12,10 +12,10 @@ export function ReservationCta() {
   return (
     <section
       id="rezerwacja"
-      className="scroll-mt-28 bg-black py-10 text-center text-white md:py-[52px]"
+      className="scroll-mt-28 py-0"
       data-purpose="reservation-cta"
     >
-      <ContentContainer>
+      <ContentContainer className="bg-black py-[40px] text-center text-white">
         <h2 className="mb-4 text-[2.15rem] font-normal leading-[1.12] tracking-tight md:mb-6 md:text-7xl md:leading-tight">
           Styl dopasowany do życia
         </h2>

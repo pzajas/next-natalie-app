@@ -32,7 +32,9 @@ export function PhilosophyTeamSpotlight() {
 
   useEffect(() => {
     let cancelled = false;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     const advance = () => {
       if (cancelled) {
@@ -70,7 +72,9 @@ export function PhilosophyTeamSpotlight() {
       aria-live="polite"
       aria-atomic="true"
       className={`space-y-6 transition-opacity ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:space-y-8 ${
-        visible ? "opacity-100 duration-520" : "pointer-events-none opacity-0 duration-480"
+        visible
+          ? "opacity-100 duration-520"
+          : "pointer-events-none opacity-0 duration-480"
       }`}
     >
       <div className="min-h-[5.75rem] md:min-h-[6.25rem]">

@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { MainFooter, MainHeader, PricingPageView } from "@/components/natalie";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Cennik | NATALIE",

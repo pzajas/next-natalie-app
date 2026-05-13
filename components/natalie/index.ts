@@ -1,5 +1,6 @@
 export { ArchiveGallery } from "./ArchiveGallery";
 export { GalleryPageView } from "./GalleryPageView";
+export { GalleryEditorialGrid } from "./GalleryEditorialGrid";
 export { HeaderStudioStatus } from "./HeaderStudioStatus";
 export { ContentContainer } from "./ContentContainer";
 export { HeroSection } from "./HeroSection";

@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
 import { instagramIconPath } from "@/lib/social-brand-paths";
 import { salonSocialLinks } from "@/lib/social-links";
+import type { ReactNode } from "react";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
@@ -8,7 +8,8 @@ const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 const socialButtonClass =
   "flex w-full min-h-10 items-center justify-center gap-2 border border-black/8 bg-white px-3 py-2.5 text-[13px] font-medium leading-tight text-black transition-all duration-300 outline-none hover:border-black/20 hover:shadow-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black/35 sm:gap-2.5 sm:text-sm md:min-h-14 md:px-5 md:py-3.5";
 
-const iconWrapClass = "flex h-4 w-4 shrink-0 items-center justify-center text-stone-800 md:h-5 md:w-5";
+const iconWrapClass =
+  "flex h-4 w-4 shrink-0 items-center justify-center text-stone-800 md:h-5 md:w-5";
 
 /** Kwadratowa marka (litera w ramce) — czytelniej „app tile” niż okrągły glyph SI. */
 const squareMarkClass =
@@ -45,7 +46,9 @@ export function SalonSocialLinks() {
           href={salonSocialLinks.facebook}
           label="Facebook"
           icon={
-            <span className={`${squareMarkClass} font-sans text-[10px] font-bold leading-none tracking-tight`}>
+            <span
+              className={`${squareMarkClass} font-sans text-[10px] font-bold leading-none tracking-tight`}
+            >
               f
             </span>
           }
@@ -63,7 +66,11 @@ export function SalonSocialLinks() {
           href={salonSocialLinks.booksy}
           label="Booksy"
           icon={
-            <span className={`${squareMarkClass} font-serif text-[11px] font-semibold leading-none`}>b</span>
+            <span
+              className={`${squareMarkClass} font-serif text-[11px] font-semibold leading-none`}
+            >
+              b
+            </span>
           }
         />
       </nav>
