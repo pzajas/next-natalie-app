@@ -11,6 +11,8 @@ const input = path.join(root, "public", "images", "Hero.png");
 const output = path.join(root, "public", "images", "Hero.webp");
 
 await sharp(input)
+  /** Max szerokość jak `.content-container` (1200px) — mniejszy plik + zgodność z `sizes` w hero. */
+  .resize(1200, null, { withoutEnlargement: true, fit: "inside" })
   .webp({ quality: 82, effort: 6, smartSubsample: true })
   .toFile(output);
 

@@ -51,7 +51,7 @@ export function HeroSection() {
                     className="object-cover object-center transition-[filter,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
                     fetchPriority="high"
                     fill
-                    sizes="100vw"
+                    sizes="(max-width: 1200px) 100vw, 1200px"
                     src={natalieImages.heroInterior}
                     priority
                   />
