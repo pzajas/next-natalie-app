@@ -5,8 +5,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ContentContainer } from "./ContentContainer";
 
-const interiorSrc = "/images/Interior.png";
-const flowersSrc = "/images/Flowers.png";
+const interiorSrc = "/images/Interior.webp";
+const flowersSrc = "/images/Flowers.webp";
 
 /** Delikatny offset w prawy dolny róg — „plecy” pod małym kadrem (referencja editorial). */
 const flowersBackingClass =

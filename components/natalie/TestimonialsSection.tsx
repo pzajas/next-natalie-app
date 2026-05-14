@@ -140,7 +140,7 @@ function TestimonialCardBody({
     >
       <div className="mb-3 flex items-center justify-between md:mb-4">
         <p className="text-sm font-semibold text-atelier-text">{t.author}</p>
-        <div className="flex items-center gap-1" aria-label="Ocena 5 na 5">
+        <div className="flex items-center gap-1" role="img" aria-label="Ocena 5 na 5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
               key={i}

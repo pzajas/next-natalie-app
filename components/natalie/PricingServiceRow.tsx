@@ -45,7 +45,9 @@ export function PricingServiceRow({
             <span className="text-atelier-accent" aria-hidden>
               —
             </span>
-            <span className="tabular-nums text-atelier-text-secondary">{duration}</span>
+            <span className="tabular-nums text-atelier-text-secondary">
+              {duration}
+            </span>
           </p>
           {promoLabel ? (
             <span

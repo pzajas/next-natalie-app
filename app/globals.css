@@ -200,7 +200,10 @@ h3,
     inset: 0;
     pointer-events: none;
     opacity: 0.04;
-    background-image: radial-gradient(rgb(255 255 255 / 0.35) 0.55px, transparent 0.55px);
+    background-image: radial-gradient(
+      rgb(255 255 255 / 0.35) 0.55px,
+      transparent 0.55px
+    );
     background-size: 3px 3px;
   }
 

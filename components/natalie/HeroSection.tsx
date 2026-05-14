@@ -49,11 +49,11 @@ export function HeroSection() {
                   <Image
                     alt="Lifestyle ujęcie pracy stylistki nad fryzurą"
                     className="object-cover object-center transition-[filter,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    fetchPriority="high"
                     fill
                     sizes="100vw"
                     src={natalieImages.heroInterior}
                     priority
-                    unoptimized
                   />
                 </GalleryPhotoZoomShell>
               </GalleryColorRevealTarget>

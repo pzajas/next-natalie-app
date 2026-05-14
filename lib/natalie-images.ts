@@ -4,8 +4,8 @@ export const natalieImages = {
   logo: "/images/Logo.svg",
   logoClean:
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAm3Z-KSY2A6ldT2rn-NAjnnRV7lP68WFn-63ZAWTBrnMX98xbZ75j9oGK64F8Y4_A_0uPxVcw7wYg3UEAXpsv4m5pcFiW5FLO4LuTG4dlM77aTyX1jllbPitVDZI1s7L2kGw7RBxSaLDOEtnjl542PIhZa0wp9IaQVsuWdCr-qWQPWUN0dRvxdpaw7dBkDoEBmP8eHo51x44RVWx9z9QAvjJV_1mC2XABhqQWfxr5FmVsHr7czbi0cHo_JxJv3MUVEnRSY0hrVVw",
-  /** Lokalny plik: `public/images/Hero.png` */
-  heroInterior: "/images/Hero.png",
+  /** Lokalny plik: `public/images/Hero.webp` (generuj z PNG: `npm run hero:webp`). */
+  heroInterior: "/images/Hero.webp",
   philosophyTools:
     "https://lh3.googleusercontent.com/aida-public/AB6AXuC2ew0JJBJb5B6ftAiBzd4GqQHUWYWWLvCuWei4X6qEjbbLgYfLfcQb6ZkAF9Px7GAZtVsw1PuhRjpJFRDD_oZ3k8iWmH3CjDFBV3KnoZxq9t_t20CJT-X6Hg0sXOS7FP13tZOuErXzaJZrsVd_EqogTyazn-cSuQXznc2QLwSKN6ezDE3fXMcJE4__yh_6lT7j_clKC82bdwKV2TnjE0OtbYGclu8IUtlJLNoDZkm2Psh-E5gPTgnQHStKB4xcObZuwDQecix61Q",
   archiveLarge:
